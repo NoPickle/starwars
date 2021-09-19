@@ -14,7 +14,7 @@ public partial class SandboxHud : HudEntity<RootPanel>
 		RootPanel.SetTemplate( "/ui/starwars_devbanner.html" );
 
 		RootPanel.AddChild<NameTags>();
-		RootPanel.AddChild<CrosshairCanvas>();
+		//RootPanel.AddChild<CrosshairCanvas>();
 		RootPanel.AddChild<ChatBox>();
 		RootPanel.AddChild<VoiceList>();
 		RootPanel.AddChild<KillFeed>();
