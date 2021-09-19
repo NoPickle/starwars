@@ -3,10 +3,10 @@ using Sandbox.Joints;
 using System;
 using System.Linq;
 
-[Library( "physgun" )]
+[Library( "weapon_physgun", Title = "Physicgun", Spawnable = true   )]
 public partial class PhysGun : Carriable
 {
-	public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
+	public override string ViewModelPath => "models/physgun/v_physgun.vmdl";
 
 	protected PhysicsBody holdBody;
 	protected WeldJoint holdJoint;
@@ -18,6 +18,9 @@ public partial class PhysGun : Carriable
 	protected float holdDistance;
 	protected bool grabbing;
 
+	protected int TimeComp;
+	protected bool FreezeAnim = false;
+
 	protected virtual float MinTargetDistance => 0.0f;
 	protected virtual float MaxTargetDistance => 10000.0f;
 	protected virtual float LinearFrequency => 20.0f;
@@ -27,6 +30,9 @@ public partial class PhysGun : Carriable
 	protected virtual float TargetDistanceSpeed => 50.0f;
 	protected virtual float RotateSpeed => 0.2f;
 	protected virtual float RotateSnapAt => 45.0f;
+
+	protected Vector3 PhysgunColor;
+	// protected virtual Vector3 PhysgunColor => new Color( 0.0f, 1.0f, 1.0f );
 
 	[Net] public bool BeamActive { get; set; }
 	[Net] public Entity GrabbedEntity { get; set; }
@@ -39,7 +45,7 @@ public partial class PhysGun : Carriable
 	{
 		base.Spawn();
 
-		SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
+		SetModel( "models/physgun/physgun.vmdl" );
 
 		CollisionGroup = CollisionGroup.Weapon;
 		SetInteractsAs( CollisionLayer.Debris );
@@ -98,6 +104,7 @@ public partial class PhysGun : Carriable
 				{
 					TryUnfreezeAll( owner, eyePos, eyeRot, eyeDir );
 				}
+
 			}
 		}
 
@@ -213,6 +220,18 @@ public partial class PhysGun : Carriable
 
 			if ( GrabbedEntity.IsValid() )
 			{
+				if ( GrabbedEntity is ModelEntity modelEnt ){
+					TimeComp=Time.Tick;
+					FreezeAnim=true;
+					Log.Info("Froze prop");
+
+					// modelEnt.GlowState = GlowStates.GlowStateOn;
+					// modelEnt.GlowDistanceStart = 0;
+					// modelEnt.GlowDistanceEnd = 1000;
+					// modelEnt.GlowColor = new Color( 0.0f,1.0f,0.0f );
+					// modelEnt.GlowActive = true;
+				}
+
 				var freezeEffect = Particles.Create( "particles/physgun_freeze.vpcf" );
 				freezeEffect.SetPosition( 0, heldBody.Transform.PointToWorld( GrabbedPos ) );
 			}

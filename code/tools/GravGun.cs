@@ -3,10 +3,10 @@ using Sandbox.Joints;
 using System;
 using System.Linq;
 
-[Library( "gravgun" )]
+[Library( "weapon_gravgun", Title = "Gravitygun", Spawnable = true  )]
 public partial class GravGun : Carriable
 {
-	public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
+	public override string ViewModelPath => "models/gravgun/v_gravgun.vmdl";
 
 	private PhysicsBody holdBody;
 	private WeldJoint holdJoint;
@@ -25,18 +25,20 @@ public partial class GravGun : Carriable
 	protected virtual float PullForce => 20.0f;
 	protected virtual float PushForce => 1000.0f;
 	protected virtual float ThrowForce => 2000.0f;
-	protected virtual float HoldDistance => 50.0f;
+	protected virtual float HoldDistance => 60.0f;
 	protected virtual float AttachDistance => 150.0f;
 	protected virtual float DropCooldown => 0.5f;
 	protected virtual float BreakLinearForce => 2000.0f;
 
 	private TimeSince timeSinceDrop;
 
+	private Sound GrabSnd;
+
 	public override void Spawn()
 	{
 		base.Spawn();
 
-		SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
+		SetModel( "models/gravgun/gravgun.vmdl" );
 
 		CollisionGroup = CollisionGroup.Weapon;
 		SetInteractsAs( CollisionLayer.Debris );
@@ -75,12 +77,15 @@ public partial class GravGun : Carriable
 						HeldBody.ApplyAngularImpulse( Vector3.Random * (HeldBody.Mass * ThrowForce) );
 					}
 
+					PlaySound( "gravgun.fire" ).SetRandomPitch(0.9f,1.2f);
+					GrabSnd.Stop();
 					GrabEnd();
 				}
 				else if ( Input.Pressed( InputButton.Attack2 ) )
 				{
 					timeSinceDrop = 0;
-
+					PlaySound( "gravgun.release" );
+					GrabSnd.Stop();
 					GrabEnd();
 				}
 				else
@@ -101,6 +106,17 @@ public partial class GravGun : Carriable
 				.HitLayer( CollisionLayer.Debris )
 				.Run();
 
+			if ( !tr.Hit || !tr.Body.IsValid() || !tr.Entity.IsValid() || tr.Entity.IsWorld  )
+			{
+				if ( Input.Pressed( InputButton.Attack1 ) )
+				{
+					PlaySound( "gravgun.empty_fire" ).SetRandomPitch(0.9f,1.2f);
+				}else if ( Input.Pressed( InputButton.Attack2 ) )
+				{
+					PlaySound( "gravgun.empty_grab_fire" ).SetRandomPitch(0.9f,1.2f);;
+				}
+			}
+
 			if ( !tr.Hit || !tr.Body.IsValid() || !tr.Entity.IsValid() || tr.Entity.IsWorld )
 				return;
 
@@ -119,6 +135,7 @@ public partial class GravGun : Carriable
 				{
 					var pushScale = 1.0f - Math.Clamp( tr.Distance / MaxPushDistance, 0.0f, 1.0f );
 					body.ApplyImpulseAt( tr.EndPos, eyeDir * (body.Mass * (PushForce * pushScale)) );
+					PlaySound( "gravgun.fire" ).SetRandomPitch(0.9f,1.2f);
 				}
 			}
 			else if ( Input.Down( InputButton.Attack2 ) )
@@ -132,16 +149,18 @@ public partial class GravGun : Carriable
 						return;
 				}
 
-				var attachPos = body.FindClosestPoint( eyePos );
-
-				if ( eyePos.Distance( attachPos ) <= AttachDistance )
+				if ( eyePos.Distance( body.Position ) <= AttachDistance )
 				{
-					var holdDistance = HoldDistance + attachPos.Distance( body.MassCenter );
-					GrabStart( modelEnt, body, eyePos + eyeDir * holdDistance, eyeRot );
+					GrabSnd.Stop();
+					GrabSnd = PlaySound( "gravgun.loop_grab" );
+					GrabStart( modelEnt, body, eyePos + eyeDir * HoldDistance, eyeRot );
 				}
-				else if ( !IsBodyGrabbed( body ) )
+				
+				if ( !IsBodyGrabbed( body ) )
 				{
 					physicsGroup.ApplyImpulse( eyeDir * -PullForce, true );
+					// PlaySound( "gravgun.empty_grab_fire" );
+					// being grab
 				}
 			}
 		}
@@ -220,6 +239,7 @@ public partial class GravGun : Carriable
 		if ( IsBodyGrabbed( body ) )
 			return;
 
+		PlaySound( "gravgun.grab_fire" ).SetRandomPitch(0.9f,1.2f);
 		GrabEnd();
 
 		HeldBody = body;
@@ -248,6 +268,13 @@ public partial class GravGun : Carriable
 
 		var client = GetClientOwner();
 		client?.Pvs.Add( HeldEntity );
+
+		HeldEntity.GlowState = GlowStates.GlowStateOn;
+		HeldEntity.GlowDistanceStart = 0;
+		HeldEntity.GlowDistanceEnd = 1000;
+		HeldEntity.GlowColor = new Color( 0.8f, 0.7f ,0);
+		HeldEntity.GlowActive = true;
+		
 	}
 
 	private void GrabEnd()
@@ -271,6 +298,9 @@ public partial class GravGun : Carriable
 		{
 			var client = GetClientOwner();
 			client?.Pvs.Remove( HeldEntity );
+
+			HeldEntity.GlowActive = false;
+			HeldEntity.GlowState = GlowStates.GlowStateOff;
 		}
 
 		HeldBody = null;
@@ -283,10 +313,7 @@ public partial class GravGun : Carriable
 		if ( !HeldBody.IsValid() )
 			return;
 
-		var attachPos = HeldBody.FindClosestPoint( startPos );
-		var holdDistance = HoldDistance + attachPos.Distance( HeldBody.MassCenter );
-
-		holdBody.Position = startPos + dir * holdDistance;
+		holdBody.Position = startPos + dir * HoldDistance;
 		holdBody.Rotation = rot * HeldRot;
 	}
 
