@@ -1,0 +1,24 @@
+Health
+{
+	.backpanel{
+		background-color: rgba(black, 0.5);
+		left: 1px;
+		width:  290px;
+		height: 35px;
+		top: 96.5%;
+		.healthvalue{
+			background-color:red;
+			left: 3px;
+			padding: 1px;
+			width: 285px;
+			height: 35px;
+			.healthtext{
+				font-family: Poppins;
+				font-size: 20px;
+				left: 2px;
+				top: 2px;
+			}
+		}
+	}
+
+}
