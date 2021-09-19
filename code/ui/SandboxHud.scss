@@ -1,16 +1,38 @@
+$base-color:  rgb(0, 81, 255) !default;
+$blur-hud: 15px !default;
+$blur-back-spawnmenu: 40px !default;
+
 Health
 {
 	position: absolute;
-	background-color: rgba( black, 0.5 );
-	right: 100px;
-	bottom: 48px;
+	background-color: rgba( $base-color, 0.15 );
+	left: 20;
+	bottom: 0;
 	font-size: 40px;
 	font-weight: bold;
 	color: white;
-	height: 80px;
-	padding: 0 20px;
+	height: 65px;
+	padding: 0 15px;
 	align-items: center;
+	border-radius: 10 10 0 0;
+	transition: background-color 0.5s ease-out;
+	backdrop-filter: blur($blur-hud);
+
+	.low_life
+	{
+		transition: background-color 0.5s ease-out;
+		// background-color:red;
+	}
+
+	.dead
+	{
+		transition: background-color 0.5s ease-out;
+		// background-color:black;
+	}
+
 }
+
+
 
 CurrentTool
 {
@@ -18,7 +40,7 @@ CurrentTool
 	background: linear-gradient(to right, rgba(black, 0.5), rgba(black, 0.0));
 	top: 100px;
 	left: 0px;
-	padding: 30px 70px;
+	padding: 10px 70px;
 	flex-direction: column;
 	width: 560px;
 	opacity: 0.0;
@@ -55,10 +77,11 @@ rootpanel
 
 	&.spawnmenuopen
 	{
-		transition: background-color 0.3s ease-out;
-		background-color: rgba( #333, 0.9 );
+		// transition: background-color 0.3s ease-out;
+		// background-color: rgba( #333, 0.6 );
+		
+		backdrop-filter: blur($blur-back-spawnmenu);
 	}
-
 
 	&.devcamera
 	{
@@ -71,40 +94,45 @@ InventoryBar
 {
 	position: absolute;
 	width: 100%;
-	bottom: 48px;
+	top: 0px;
 	justify-content: center;
-	align-items: flex-end;
+	// align-items: flex-end;
+	
 }
 
 InventoryIcon
 {
-	width: 80px;
-	height: 80px;
+	width: 70px;
+	height: 40px;
 	background-color: rgba( #222, 0.3 );
 	margin: 0px 2px;
 	position: relative;
 	transition: all 0.2s ease-in-out;
-	margin-top: 10px;
+	// margin-top: 10px;
 	font-family: poppins;
+	border-radius: 0 0 10 10;
+	backdrop-filter: blur($blur-hud);
 
 	.item-name
 	{
-		padding: 5px;
+		// padding: 5px;
 		color: white;
 		text-align: center;
 		left: 0;
 		right: 0;
 		font-size: 10px;
 		position: absolute;
-		bottom: 0;
-		opacity: 0.7;
+		bottom: 10;
+		opacity: 0.3;
 		transition: all 0.5s ease-in-out;
-		text-shadow: 1px 1px 5px black;
+		text-shadow: 1px 1px 1px black;
+		// transform: rotate(-20deg);
+		text-transform: capitalize;
 	}
 
 	.slot-number
 	{
-		font-size: 25px;
+		font-size: 15px;
 		color: black;
 		font-weight: 900;
 		opacity: 0.3;
@@ -115,21 +143,26 @@ InventoryIcon
 
 	&.active
 	{
-		background-color: rgba( #0094ff, 0.5 );
+		// display: inline-block;
+		background-color: rgba( $base-color, 0.15 );
 		transition: all 0.1s ease-out;
-		width: 100px;
-		height: 100px;
+		top: 0;
+		// width: 100px;
+		height: 50px;
 
 		.slot-number
 		{
-			color: #275576;
+			color: #f1f1f1;
 		}
 
 		.item-name
 		{
 			opacity: 1;
 			transition: all 0.1s ease-out;
-			font-size: 13px;
+			font-size: 11px;
+			transform: rotate(-10deg);
+			padding: 5px;
+			bottom: 0;
 		}
 	}
 }
