@@ -60,6 +60,7 @@ partial class Pistol : Weapon
 		}
 	}
 
+	
 	public override void SimulateAnimator( PawnAnimator anim )
 	{
 		anim.SetParam( "holdtype", 1 );
