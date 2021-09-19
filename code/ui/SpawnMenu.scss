@@ -1,10 +1,13 @@
-﻿spawnmenu {
+﻿$base-color:  rgb(0, 81, 255) !default;
+$blur-spawnmenu: 55px !default;
+
+spawnmenu {
     left: 0px;
     right: 0px;
     top: 0px;
     bottom: 0px;
     margin: 100px;
-    margin-bottom: 200px;
+    margin-bottom: 100px;
     border-radius: 5px;
     pointer-events: none;
     transition: all 0.1s ease-out;
@@ -17,6 +20,9 @@
         flex-shrink: 0;
         margin-bottom: 4px;
         padding-left: 10px;
+        background-color: rgba( rgb(17, 17, 17), 0.3 );
+        backdrop-filter: blur($blur-spawnmenu);
+        border-radius: 5;
 
         button {
             padding: 6px 5px;
@@ -28,8 +34,9 @@
             color: #fff;
             cursor: pointer;
             //border-radius: 5px;
+            
             label {
-                text-shadow: 1px 1px 4px rgba( black, 0.2 );
+                // text-shadow: 1px 1px 4px rgba( black, 0.2 );
             }
 
             &:hover {
@@ -40,6 +47,7 @@
                 transform: scale( 1 );
                 opacity: 1;
                 color: #fff;
+                background-color: rgba( $base-color, 0.5 );
                 //	background-color: #fff;//( #3273eb, 0.2 );
                 //color: #3273eb;
             }
@@ -54,8 +62,9 @@
         transition: all 0.3s ease-in;
 
         .body {
-            border-radius: 10px;
-            background-color: rgba( #111, 0.7 );
+            border-radius: 5px;
+            background-color: rgba( rgb(17, 17, 17), 0.3 );
+            backdrop-filter: blur($blur-spawnmenu);
             flex-grow: 1;
         }
     }
@@ -71,29 +80,39 @@
         .body {
             //	background-color: rgba( #333, 0.95 );
             flex-grow: 1;
-            border-radius: 10px;
-            background-color: rgba( #111, 0.7 );
+            border-radius: 5px;
+            background-color: rgba( rgb(17, 17, 17), 0.3 );
+            // background-image: url('https://i.imgur.com/ZnxyBQt.png');
+            // background-size: 120px;
+            // background-repeat: no-repeat;
+            // background-position: 50% 15;
+            backdrop-filter: blur($blur-spawnmenu);
             padding: 10px;
-
 
             .toollist {
                 flex-direction: column;
                 width: 150px;
-                color: #aaa;
+                color: white;
+                background-color: rgba( rgb(20, 20, 20), 0.2 );
+                padding: 5px;
 
                 button {
                     padding: 3px 10px;
                     font-size: 11px;
                     transition: all 0.2s ease-out;
                     cursor: pointer;
+                    background-color: rgba( rgb(34, 34, 34), 0.3 );
+                    margin: 0.5px;
 
                     &:hover {
                         //border-left: 3px solid #3273eb;
-                        color: white;
+                        color: rgb(211, 211, 211);
+                        background-color: rgba( $base-color, 0.3 );
                     }
 
                     &.active {
                         //border-left: 5px solid #3273eb;
+                        background-color: rgba( $base-color, 0.5 );
                         color: white;
                     }
                 }
@@ -103,7 +122,7 @@
                 //background-color: rgba( #111, 0.7 );
                 flex-grow: 1;
                 margin-left: 5px;
-                border-radius: 0 3px 3px 0;
+                border-radius: 0 5px 5px 0;
             }
         }
     }
@@ -114,7 +133,7 @@
     transition: all 0.2s ease-out;
     pointer-events: all;
     opacity: 1;
-    transform: scale( 1 );
+    // transform: scale( 1 );
 
     .left, .right {
         left: 0;
@@ -144,7 +163,7 @@
         }
 
         .icon {
-            border-radius: 16px;
+            border-radius: 5px;
             color: rgba( #fff, 0.5 );
             font-size: 12px;
             text-align: center;
@@ -155,13 +174,19 @@
             background-size: cover;
             background-color: rgba(black, 0.1);
             background-image: url( /entity/spawnicon.png );
+            border: 3px solid rgba(87, 87, 87, 0.815);
+            transition: border 0.3s ease-out;
 
             label {
+                display: none;
                 font-size: 9px;
                 position: absolute;
-                bottom: -17px;
+                bottom: -5px;
                 left: 0;
                 right: 0;
+                border-radius: 0 0 4px 4px;
+                background-color: rgba(87, 87, 87, 0.815);
+                transition: border 0.3s ease-out;
                 pointer-events: none;
             }
 
@@ -173,5 +198,18 @@
             &:active {
             }
         }
+
+        .icon:hover {
+            transition: all 0.3s ease-out;
+            border: 3px solid $base-color;
+            label {
+                transition: all 0.3s ease-out;
+                bottom: 0;
+                display: flex;
+                background-color: $base-color;
+            }
+        }
+
+        
     }
 }
