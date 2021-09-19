@@ -1,15 +1,15 @@
-﻿using Sandbox;
+using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 using Sandbox.UI.Tests;
 using System.Linq;
 
 [Library]
-public partial class EntityList : Panel
+public partial class WeaponList : Panel
 {
 	VirtualScrollPanel Canvas;
 
-	public EntityList()
+	public WeaponList()
 	{
 		AddClass( "spawnpage" );
 		AddChild( out Canvas, "canvas" );
@@ -24,7 +24,7 @@ public partial class EntityList : Panel
 			btn.AddEventListener( "onclick", () => ConsoleSystem.Run( "spawn_entity", entry.Name ) );
 			btn.Style.Background = new PanelBackground
 			{
-				Texture = Texture.Load( $"/entity/{entry.Name}.png", false )
+				Texture = Texture.Load( $"/weapons/{entry.Name}.png", false )
 			};
 		};
 
@@ -32,7 +32,7 @@ public partial class EntityList : Panel
 
 		foreach ( var entry in ents )
 		{
-			if((entry.Name).StartsWith( "weapon_" )){ continue; }
+            if(!(entry.Name).StartsWith( "weapon_" )){ continue; }
 			Canvas.AddItem( entry );
 		}
 	}
