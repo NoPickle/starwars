@@ -1,111 +1,15 @@
-Health {
-	&.open {
-		opacity: 1;
-		transform: scale( 1 );
-	}
-
-	opacity: 0;
-	position: absolute;
-	transition: all 0.5s ease-out;
-	background-color: rgba( black, 0.5 );
-	right: 40px;
-	bottom: 20px;
-	font-size: 30px;
-	font-weight: bold;
-	color: white;
-	height: 60px;
-	padding: 0 20px;
-	align-items: center;
-	border-radius: 15px;
-}
-
-Voice_icon {
-
-	&.open {
-		opacity: 1;
-		transform: scale( 1 );
-	}
-
-	opacity: 0;
-	position: absolute;
-	transition: all 0.5s ease-out;
-	background-color: rgba( black, 0.5 );
-	right: 250px;
-	bottom: 20px;
-	font-size: 30px;
-	font-weight: bold;
-	color: white;
-	height: 60px;
-	padding: 0 20px;
-	align-items: center;
-	border-radius: 15px;
-}
-
-Name_Spawn {
-	flex-basis;
-	background-color: rgba( black, 0.5 );
-	opacity: 1;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translateX( -50% ) translateY( -50% );
-	border-radius: 15px;
-	align-items: center;
-	text-align: center;
-	font-weight: bolder;
-	color: white;
-	pointer-events: all;
-	flex-direction: column;
-	font-size: 25px;
-	font-weight: bold;
-	font-family: poppins;
-	padding: 10px;
-
-	.space {
-		font-size: 15px;
-	}
-
-	.bp_close {
-		padding: 5px;
-		border-radius: 15px;
-		background-color: rgba( white, 0.25 );
-	}
-
-	&.close {
-		opacity: 0;
-		pointer-events: none;
-	}
-}
-
-
-text.title
+Health
 {
-	font-family: Poppins;
-	font-size: 20px;
+	position: absolute;
+	background-color: rgba( black, 0.5 );
+	right: 100px;
+	bottom: 48px;
+	font-size: 40px;
 	font-weight: bold;
 	color: white;
-	position: absolute;
-	left: 100px;
-	top: 50px;
-}
-
-text.title2 {
-	font-family: Poppins;
-	font-size: 20px;
-	font-weight: bold;
-	color: white;
-	position: absolute;
-	left: 100px;
-	top: 75px;
-}
-text.title3 {
-	font-family: Poppins;
-	font-size: 20px;
-	font-weight: bold;
-	color: white;
-	position: absolute;
-	left: 100px;
-	top: 100px;
+	height: 80px;
+	padding: 0 20px;
+	align-items: center;
 }
 
 CurrentTool
@@ -168,15 +72,8 @@ InventoryBar
 	position: absolute;
 	width: 100%;
 	bottom: 48px;
-	transition: all 0.5s ease-out;
 	justify-content: center;
 	align-items: flex-end;
-	opacity: 0;
-
-	&.open
-	{
-		opacity: 1;
-	}
 }
 
 InventoryIcon
@@ -218,7 +115,7 @@ InventoryIcon
 
 	&.active
 	{
-		background-color: rgba( #a8323c, 0.5 );
+		background-color: rgba( #0094ff, 0.5 );
 		transition: all 0.1s ease-out;
 		width: 100px;
 		height: 100px;
