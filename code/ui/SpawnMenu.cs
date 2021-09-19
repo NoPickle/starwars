@@ -27,10 +27,13 @@ public partial class SpawnMenu : Panel
 
 			{
 				var props = body.AddChild<SpawnList>();
-				tabs.SelectedButton = tabs.AddButtonActive( "Props", ( b ) => props.SetClass( "active", b ) );
+				tabs.SelectedButton = tabs.AddButtonActive( "🧱 Props", ( b ) => props.SetClass( "active", b ) );
 
 				var ents = body.AddChild<EntityList>();
-				tabs.AddButtonActive( "Entities", ( b ) => ents.SetClass( "active", b ) );
+				tabs.AddButtonActive( "🎈 Entities", ( b ) => ents.SetClass( "active", b ) );
+
+				var wep = body.AddChild<WeaponList>();
+				tabs.AddButtonActive( "🔫 Weapons", ( b ) => wep.SetClass( "active", b ) );
 			}
 		}
 
@@ -38,8 +41,9 @@ public partial class SpawnMenu : Panel
 		{
 			var tabs = right.Add.Panel( "tabs" );
 			{
-				tabs.Add.Button( "Tools" ).AddClass( "active" );
-				tabs.Add.Button( "Utility" );
+				tabs.Add.Button( "🔧 Tools" ).AddClass( "active" );
+				tabs.Add.Button( "💡 Utility" );
+				
 			}
 			var body = right.Add.Panel( "body" );
 			{
@@ -53,7 +57,7 @@ public partial class SpawnMenu : Panel
 
 	}
 
-	void RebuildToolList()
+		void RebuildToolList()
 	{
 		toollist.DeleteChildren( true );
 
@@ -89,4 +93,5 @@ public partial class SpawnMenu : Panel
 
 		RebuildToolList();
 	}
+
 }
