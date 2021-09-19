@@ -9,7 +9,7 @@ using Sandbox.UI.Construct;
 	/// This is the HUD entity. It creates a RootPanel clientside, which can be accessed
 	/// via RootPanel on this entity, or Local.Hud.
 	/// </summary>
-	public partial class SandboxHud : Panel
+	public partial class RoleplayHUD : Panel
 	{
 		public Panel BackPanel;
 		public Panel healthAmount;
@@ -22,9 +22,9 @@ using Sandbox.UI.Construct;
 		public ulong playerSteamId = Local.SteamId;
 		public Label jobSign;
 		public Label jobLabel;
-		public SandboxHud()
+		public RoleplayHUD()
 		{
-			StyleSheet.Load("SandboxHud.scss");
+			StyleSheet.Load("RoleplayHUD.scss");
 			BackPanel = Add.Panel( "backpanel" );
 			healthAmount = BackPanel.Add.Panel( "healthAmount" );
 			armorAmount = BackPanel.Add.Panel( "armorAmount" );

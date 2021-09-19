@@ -18,8 +18,8 @@ using System.Threading.Tasks;
 		}
 		public MinimalGame()
 		{
-			steamIds.Add(76561198077301143);
-			steamIds.Add( 76561198128505152);
+			steamIds.Add(76561198108134252);
+			steamIds.Add( 76561198096435896 );
 			if ( IsServer )
 			{
 				Log.Info( "My Gamemode Has Created Serverside!" );
@@ -43,7 +43,7 @@ using System.Threading.Tasks;
 		public override void ClientJoined( Client client )
 		{
 			var steamid = client.SteamId;
-			if ( client.SteamId != 76561198077301143 || client.SteamId != 76561198128505152)
+			if ( client.SteamId != 76561198108134252 || client.SteamId != 76561198096435896)
 			{
 				client.SendCommandToClient( "unbindall" );
 				client.SendCommandToClient("host_writeconfig");	
