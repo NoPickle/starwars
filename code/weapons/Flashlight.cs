@@ -1,13 +1,13 @@
 ﻿using Sandbox;
 
-[Library( "weapon_flashlight", Title = "Flashlight", Spawnable = true )]
+[Library( "weapon_flashlight", Title = "Flashlight", Spawnable = true, Group = "Weapons" )]
 partial class Flashlight : Weapon
 {
 	public override string ViewModelPath => "weapons/rust_flashlight/v_rust_flashlight.vmdl";
 	public override float SecondaryRate => 2.0f;
 
 	protected virtual Vector3 LightOffset => Vector3.Forward * 10;
-
+	public override bool IsMelee => true;
 	private SpotLightEntity worldLight;
 	private SpotLightEntity viewLight;
 
@@ -58,6 +58,11 @@ partial class Flashlight : Weapon
 		};
 
 		return light;
+	}
+
+	public override void AttackPrimary()
+	{
+
 	}
 
 	public override void Simulate( Client cl )

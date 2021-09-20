@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-[Library( "ent_balloon", Title = "Balloon", Spawnable = true )]
+[Library( "ent_balloon", Title = "Balloon", Spawnable = true, Group = "Fun" )]
 public partial class BalloonEntity : Prop
 {
 	private static float GravityScale => -0.2f;
@@ -23,7 +23,7 @@ public partial class BalloonEntity : Prop
 	}
 
 	[Event.Physics.PostStep]
-	protected void UpdateGravity()
+	public void OnPostPhysicsStep()
 	{
 		if ( !this.IsValid() )
 			return;
@@ -31,7 +31,6 @@ public partial class BalloonEntity : Prop
 		var body = PhysicsBody;
 		if ( !body.IsValid() )
 			return;
-
 
 		body.GravityScale = GravityScale;
 	}

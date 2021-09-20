@@ -1,8 +1,9 @@
 ﻿namespace Sandbox.Tools
 {
-	[Library( "tool_balloon", Title = "Balloons", Description = "Create Balloons!", Group = "construction" )]
+	[Library( "tool_balloon", Title = "Balloons", Description = "Create Balloons!", Group = "balloons" )]
 	public partial class BalloonTool : BaseTool
 	{
+		public virtual string BalloonModelPath => "models/citizen_props/balloonregular01.vmdl";
 		[Net]
 		public Color Tint { get; set; }
 
@@ -31,7 +32,7 @@
 
 		public override void CreatePreviews()
 		{
-			if ( TryCreatePreview( ref previewModel, "models/citizen_props/balloonregular01.vmdl" ) )
+			if ( TryCreatePreview( ref previewModel, BalloonModelPath ) )
 			{
 				previewModel.RelativeToNormal = false;
 			}
@@ -41,7 +42,8 @@
 		{
 			if ( previewModel.IsValid() )
 			{
-				previewModel.RenderColor = Tint;
+				previewModel.RenderColor = Input.Down( InputButton.Duck )
+					? (Owner as SandboxPlayer).PlayerColor : Tint;
 			}
 
 			if ( !Host.IsServer )
@@ -71,16 +73,18 @@
 				if ( tr.Entity is BalloonEntity )
 					return;
 
-				var ent = new BalloonEntity
-				{
-					Position = tr.EndPos,
-				};
+				var ent = CreateBalloon();
+				ent.Position = tr.EndPos;
 
-				ent.SetModel( "models/citizen_props/balloonregular01.vmdl" );
+				ent.SetModel( BalloonModelPath );
 				ent.PhysicsBody.GravityScale = -0.2f;
-				ent.RenderColor = Tint;
+				ent.RenderColor = Input.Down( InputButton.Duck )
+					? (Owner as SandboxPlayer).PlayerColor : Tint; ;
 
 				Tint = Color.Random;
+
+				if ( Host.IsServer )
+					Undo.Add( Owner.GetClientOwner(), new EntityUndo( ent ) );
 
 				if ( !useRope )
 					return;
@@ -117,7 +121,13 @@
 					rope?.Destroy( true );
 					spring.Remove();
 				} );
+
+				if ( Host.IsServer )
+					Undo.Add( Owner.GetClientOwner(), new EntityUndo( ent ) );
 			}
 		}
+
+		public virtual BalloonEntity CreateBalloon()
+			=> new BalloonEntity();
 	}
 }

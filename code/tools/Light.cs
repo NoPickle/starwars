@@ -35,8 +35,8 @@
 
 			using ( Prediction.Off() )
 			{
-				bool useRope = Input.Pressed( InputButton.Attack1 );
-				if ( !useRope && !Input.Pressed( InputButton.Attack2 ) )
+				bool useRope = Input.Down( InputButton.Duck );
+				if ( !Input.Pressed( InputButton.Attack1 ) && !Input.Pressed( InputButton.Attack2 ) )
 					return;
 
 				var startPos = Owner.EyePos;
@@ -67,14 +67,18 @@
 					LinearAttenuation = 0.0f,
 					QuadraticAttenuation = 1.0f,
 					Brightness = 1,
-					Color = Color.Random,
-					LightCookie = Texture.Load( "materials/effects/lightcookie.vtex" )
+					Color = Input.Pressed( InputButton.Attack2 )
+						? (Owner as SandboxPlayer).PlayerColor
+						: Color.Random
 				};
 
 				light.UseFogNoShadows();
 				light.SetModel( Model );
 				light.SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
 				light.Position = tr.EndPos + -light.CollisionBounds.Center + tr.Normal * light.CollisionBounds.Size * 0.5f;
+
+				if ( Host.IsServer )
+					Undo.Add( Owner.GetClientOwner(), new EntityUndo( light ) );
 
 				if ( !useRope )
 					return;

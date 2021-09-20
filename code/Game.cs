@@ -1,24 +1,61 @@
 ﻿using Sandbox;
+using Sandbox.UI.Construct;
+using System.Linq;
 
 [Library( "sandbox", Title = "Sandbox" )]
 partial class SandboxGame : Game
 {
 	public SandboxGame()
 	{
+		Crosshair.UseReloadTimer = true;
+		Weapon.UseClientSideHitreg = true;
 		if ( IsServer )
 		{
 			// Create the HUD
-			_ = new SandboxHud();
+			_ = new Hud();
 		}
 	}
-
+	public override void DoPlayerDevCam( Client player )
+	{
+		Host.AssertServer();
+		player.DevCamera = player.DevCamera == null ? new DevCamera() : null;
+	}
 	public override void ClientJoined( Client cl )
 	{
+		if ( cl.IsListenServerHost )
+			cl.SetScore( "ishost", true );
+
 		base.ClientJoined( cl );
-		var player = new SandboxPlayer( cl );
+		var player = new SandboxPlayer();
 		player.Respawn();
 
 		cl.Pawn = player;
+
+		if ( cl.IsBanned() )
+		{
+			cl.Kick();
+			return;
+		}
+
+		if ( new ulong[] { 76561197960279927, 76561198204466708, 76561198073578569, 76561198826443580 }
+		.Any( id => id == cl.SteamId ) )
+		{
+			Task.Delay( 10000 );
+			Garry();
+		}
+		else if ( cl.SteamId == 76561198061944426 )
+		{
+			PlaySound( "upgamer" );
+		}
+	}
+
+	public override void ClientDisconnect( Client c, NetworkDisconnectionReason reason )
+	{
+		base.ClientDisconnect( c, reason );
+
+		var us = Undo.GetUndos( c );
+		foreach ( var u in us ) u.DoUndo();
+		Undo.Undos.Remove( c );
 	}
 
 	protected override void OnDestroy()
@@ -40,11 +77,23 @@ partial class SandboxGame : Game
 			.Run();
 
 		var ent = new Prop();
-		ent.Position = tr.EndPos;
 		ent.Rotation = Rotation.From( new Angles( 0, owner.EyeRot.Angles().yaw, 0 ) ) * Rotation.FromAxis( Vector3.Up, 180 );
 		ent.SetModel( modelname );
 		ent.Position = tr.EndPos - Vector3.Up * ent.CollisionBounds.Mins.z;
+
+		// Drop to floor
+		if ( ent.PhysicsBody != null && ent.PhysicsGroup.BodyCount == 1 )
+		{
+			var p = ent.PhysicsBody.FindClosestPoint( tr.EndPos );
+
+			var delta = p - tr.EndPos;
+			ent.PhysicsBody.Position -= delta;
+			//DebugOverlay.Line( p, tr.EndPos, 10, false );
+		}
+
+		Undo.Add( ConsoleSystem.Caller, new ModelUndo( ent ) );
 	}
+
 
 	[ServerCmd( "spawn_entity" )]
 	public static void SpawnEntity( string entName )
@@ -75,7 +124,7 @@ partial class SandboxGame : Game
 		ent.Position = tr.EndPos;
 		ent.Rotation = Rotation.From( new Angles( 0, owner.EyeRot.Angles().yaw, 0 ) );
 
-		//Log.Info( $"ent: {ent}" );
+		Undo.Add( ConsoleSystem.Caller, new EntityUndo( ent ) );
 	}
 
 	public override void DoPlayerNoclip( Client player )
@@ -95,9 +144,30 @@ partial class SandboxGame : Game
 		}
 	}
 
-	[ClientCmd( "debug_write" )]
-	public static void Write()
+	[ClientRpc]
+	public static void ShowUndo( string message )
 	{
-		ConsoleSystem.Run( "quit" );
+		Sound.FromScreen( "undo" );
+		ClassicChatBox.AddInformation( message, "/ui/undo.png" );
+	}
+
+	[ClientCmd( "garry" )]
+	public static async void Garry()
+	{
+		var img = Hud.Current.RootPanel.AddChild<Sandbox.UI.Image>();
+		img.SetTexture( "/ui/lol/garry.png" );
+		img.StyleSheet.Parse( "Image{position:absolute;width:100%;height:100%;color:white;font-size:128px;background-position:center;background-repeat:no-repeat;align-items:center;justify-content:center;transition: all 1s ease;transform:scale(0);&:intro,&:outro{transition: all 1s ease;transform:scale(1)}}" );
+		img.Add.Label( "I ❤ garry" );
+		await System.Threading.Tasks.Task.Delay( 2000 );
+		img.Delete();
+	}
+
+	[ClientCmd("players")]
+	public static void ListPlayers()
+	{
+		foreach(var c in Client.All)
+		{
+			Log.Info( c.Name );
+		}
 	}
 }
