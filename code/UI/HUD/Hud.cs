@@ -12,6 +12,7 @@ public partial class Hud : HudEntity<RootPanel>
 		Current = this;
 
 		RootPanel.StyleSheet.Load( "/UI/Hud/Hud.scss" );
+		RootPanel.SetTemplate( "/UI/Hud/starwars_devbanner.html" );
 
 		RootPanel.AddChild<NameTags>();
 		RootPanel.AddChild<CrosshairCanvas>();
