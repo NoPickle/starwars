@@ -79,84 +79,51 @@ spawnmenu {
         transition: all 0.3s ease-in;
 
         .body {
-            //  background-color: rgba( #333, 0.95 );
+            //	background-color: rgba( #333, 0.95 );
             flex-grow: 1;
-            border-radius: 10px;
-            background-color: rgba( #111, 0.7 );
+            border-radius: 5px;
+            background-color: rgba( rgb(17, 17, 17), 0.3 );
+            // background-image: url('https://i.imgur.com/ZnxyBQt.png');
+            // background-size: 120px;
+            // background-repeat: no-repeat;
+            // background-position: 50% 15;
+            backdrop-filter: blur($blur-spawnmenu);
             padding: 10px;
 
-            .page {
-                display: none;
-
-                Image {
-                    width: 64px;
-                    height: 64px;
-                }
-
-                &.visible {
-                    display: flex;
-                }
-            }
-
             .toollist {
-                flex-direction: row;
-                width: 425px;
-                color: #aaa;
-
-                .toolpanel {
-                    margin-left: 20px;
-                    width: 300px;
-                }
+                flex-direction: column;
+                width: 150px;
+                color: white;
+                background-color: rgba( rgb(20, 20, 20), 0.2 );
+                padding: 5px;
 
                 button {
                     padding: 3px 10px;
                     font-size: 11px;
                     transition: all 0.2s ease-out;
                     cursor: pointer;
-					background-color: rgba( rgb(34, 34, 34), 0.3 );
+                    background-color: rgba( rgb(34, 34, 34), 0.3 );
                     margin: 0.5px;
 
                     &:hover {
                         //border-left: 3px solid #3273eb;
-						background-color: rgba( $base-color, 0.3 );
-                        color: white;
+                        color: rgb(211, 211, 211);
+                        background-color: rgba( $base-color, 0.3 );
                     }
 
                     &.active {
                         //border-left: 5px solid #3273eb;
-						background-color: rgba( $base-color, 0.5 );
+                        background-color: rgba( $base-color, 0.5 );
                         color: white;
                     }
                 }
             }
 
-            .util {
-                flex-direction: column;
-                color: #aaa;
-
-                button {
-                    padding: 3px 10px;
-                    transition: all 0.2s ease-out;
-                    cursor: pointer;
-
-                    label {
-                        opacity: 1;
-                    }
-
-                    &:hover {
-                        //border-left: 3px solid #3273eb;
-                        color: white;
-                    }
-
-                    &.active {
-                        //border-left: 5px solid #3273eb;
-                        color: white;
-                    }
-                }
-
-                Label {
-                    opacity: 0.5;
-                }
+            .inspector {
+                //background-color: rgba( #111, 0.7 );
+                flex-grow: 1;
+                margin-left: 5px;
+                border-radius: 0 5px 5px 0;
             }
         }
     }
