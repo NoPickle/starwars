@@ -58,77 +58,67 @@ rootpanel {
 }
 
 
-InventoryBar
-{
-	position: absolute;
-	width: 100%;
-	top:0px;
-	justify-content: center;
-	align-items: flex-start;
-	transition: all 0.2s ease-in-out;
-	font-family: poppins;
-	color: #fff;
+InventoryBar {
+    position: absolute;
+    width: 100%;
+    bottom: 48px;
+    justify-content: center;
+    align-items: flex-end;
+    z-index: 50;
+}
 
-	label {
-		opacity: 1;
-		transition: all 0.2s ease-in-out;
-	}
+InventoryIcon {
+    width: 80px;
+    height: 80px;
+    margin: 0px 2px;
+    position: relative;
+    transition: all 0.2s ease-in-out;
+    margin-top: 10px;
+    font-family: poppins;
+    backdrop-filter: blur(10px);
+    background-position: center;
+    background-size: contain;
 
-	&.hidden{
-		transform: scale(0.5);
-		margin-top: -256px;
-		label {
-			opacity:0;
-		}
-	}
+    .item-name {
+        padding: 5px;
+        color: white;
+        text-align: center;
+        left: 0;
+        right: 0;
+        font-size: 10px;
+        position: absolute;
+        bottom: 0;
+        opacity: 0.7;
+        transition: all 0.5s ease-in-out;
+        //text-shadow: 1px 1px 5px black;
+    }
 
-	.group {
-		width: 80px;
-		margin:0px 5px;
-		flex-direction: column;
-		transition: all 0.2s ease-in-out;
+    .slot-number {
+        font-size: 25px;
+        color: black;
+        font-weight: 900;
+        opacity: 0.3;
+        position: absolute;
+        top: 1px;
+        right: 5px;
+    }
 
-		&.active{
-			width: 120px;
-		}
+    &.active, &:hover {
+        background-color: rgba( orange, 0.5 );
+        transition: all 0.1s ease-out;
+        width: 100px;
+        height: 100px;
+    }
 
-		.groupHeader {
-			background: linear-gradient(to top, rgba(black, 0.5), rgba(black, 0.0));
-			position: absolute;
-			left: 0px;
-			top: 0px;
-			width: 100%;
-			height:30px;
-		}
+    &.active {
+        .slot-number {
+            color: #275576;
+        }
 
-		.groupName {
-			position: absolute;
-			top: 0px;
-			left: 5px;
-			font-size: 20px;
-		}
-	}
-
-	.weaponslot {
-		height: 40px;
-		background-color: #3338;
-		margin-bottom: 5px;
-		text-align: center;
-		transition: all 0.2s ease-in-out;
-		border-color: white;
-		font-size:14px;
-		&.active{
-			font-size:20px;
-			//border: 2px solid white;
-			background-color: #38f8;
-
-		}
-	}
-
-	.weaponname{
-		position:absolute;
-		bottom:0px;
-		left:0px;
-		right:0px;
-	}
+        .item-name {
+            opacity: 1;
+            transition: all 0.1s ease-out;
+            font-size: 13px;
+        }
+    }
 }
