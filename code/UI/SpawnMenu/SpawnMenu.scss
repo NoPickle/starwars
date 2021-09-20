@@ -1,4 +1,4 @@
-﻿$base-color:  rgb(0, 81, 255) !default;
+﻿$base-color:  rgb(36, 232, 108) !default;
 $blur-spawnmenu: 55px !default;
 
 spawnmenu {
@@ -211,11 +211,11 @@ spawnmenu {
         }
 
         .cell {
-            padding: 15px;
+            padding: 5px;
         }
 
         .icon {
-            border-radius: 16px;
+            border-radius: 5px;
             color: rgba( #fff, 0.5 );
             font-size: 12px;
             text-align: center;
@@ -226,6 +226,7 @@ spawnmenu {
             background-size: cover;
             background-color: rgba(black, 0.1);
             background-image: url( /entity/spawnicon.png );
+            transition: border 0.3s ease-out;
 
             label {
                 display: none;
