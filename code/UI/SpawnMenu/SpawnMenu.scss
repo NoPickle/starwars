@@ -25,6 +25,7 @@ spawnmenu {
         backdrop-filter: blur($blur-spawnmenu);
         border-radius: 5;
 
+
         button {
             padding: 6px 5px;
             margin-right: 10px;
@@ -234,17 +235,6 @@ spawnmenu {
             }
 
             &:active {
-            }
-            
-        }
-        .icon:hover {
-            transition: all 0.3s ease-out;
-            border: 3px solid $base-color;
-            label {
-                transition: all 0.3s ease-out;
-                bottom: 0;
-                display: flex;
-                background-color: $base-color;
             }
         }
     }
