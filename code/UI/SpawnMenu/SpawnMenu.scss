@@ -1,7 +1,4 @@
-﻿$base-color:  rgb(0, 81, 255) !default;
-$blur-spawnmenu: 55px !default;
-
-spawnmenu {
+﻿spawnmenu {
     z-index: 1000;
     left: 0px;
     right: 0px;
@@ -21,9 +18,6 @@ spawnmenu {
         flex-shrink: 0;
         margin-bottom: 4px;
         padding-left: 10px;
-        background-color: rgba( rgb(17, 17, 17), 0.3 );
-        backdrop-filter: blur($blur-spawnmenu);
-        border-radius: 5;
 
         button {
             padding: 6px 5px;
@@ -61,10 +55,9 @@ spawnmenu {
         transition: all 0.3s ease-in;
 
         .body {
-            border-radius: 5px;
-            background-color: rgba( rgb(17, 17, 17), 0.3 );
-            backdrop-filter: blur($blur-spawnmenu);
-            flex-grow: 1
+            border-radius: 10px;
+            background-color: rgba( #111, 0.7 );
+            flex-grow: 1;
         }
     }
 
