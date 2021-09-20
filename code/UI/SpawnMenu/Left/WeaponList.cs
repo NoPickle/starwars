@@ -1,39 +1,53 @@
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
-using Sandbox.UI.Tests;
 using System.Linq;
 
 [Library]
 public partial class WeaponList : Panel
 {
-	VirtualScrollPanel Canvas;
-
 	public WeaponList()
 	{
 		AddClass( "spawnpage" );
-		AddChild( out Canvas, "canvas" );
+		Reload();
+	}
 
-		Canvas.Layout.AutoColumns = true;
-		Canvas.Layout.ItemSize = new Vector2( 100, 100 );
-		Canvas.OnCreateCell = ( cell, data ) =>
+	//[Event.Hotload]
+	void Reload()
+	{
+		DeleteChildren();
+
+		var ents = Library.GetAllAttributes<Entity>().Where( x => x.Spawnable ).OrderBy( x => x.Title );
+
+		foreach ( var g in ents.Select( e => e.Group ).Distinct() )
 		{
-			var entry = (LibraryAttribute)data;
-			var btn = cell.Add.Button( entry.Title );
-			btn.AddClass( "icon" );
-			btn.AddEventListener( "onclick", () => ConsoleSystem.Run( "spawn_entity", entry.Name ) );
-			btn.Style.Background = new PanelBackground
+			var p = Add.Panel( "group canvas entities" );
+			p.Add.Label( g ?? "null", "title" );
+			var list = p.Add.Panel( "canvas entities" );
+
+			foreach ( var entry in ents.Where( e => e.Group == g ) )
 			{
-				Texture = Texture.Load( $"/weapons/{entry.Name}.png", false )
-			};
-		};
+				var btn = list.Add.Button( entry.Title, "icon cell" );
 
-		var ents = Library.GetAllAttributes<Entity>().Where( x => x.Spawnable ).OrderBy( x => x.Title ).ToArray();
+				btn.Style.Width = 100;
+				btn.Style.Height = 100;
 
-		foreach ( var entry in ents )
-		{
-            if(!(entry.Name).StartsWith( "weapon_" )){ continue; }
-			Canvas.AddItem( entry );
+				btn.AddEventListener( "onclick", () => ConsoleSystem.Run( "spawn_entity", entry.Name ) );
+
+				var entityicon = $"/weapons/{entry.Name}.png";
+				var weaponicon = $"/ui/weapons/{entry.Name}.png";
+				string icn = "";
+
+				if ( FileSystem.Mounted.FileExists( entityicon ) ) icn = entityicon;
+				else if ( FileSystem.Mounted.FileExists( weaponicon ) ) icn = weaponicon;
+
+
+
+				btn.Style.Background = new PanelBackground
+				{
+					Texture = Texture.Load( icn, false )
+				};
+			}
 		}
 	}
 }
