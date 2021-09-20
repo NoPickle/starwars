@@ -2,12 +2,13 @@
 $blur-spawnmenu: 55px !default;
 
 spawnmenu {
+    z-index: 1000;
     left: 0px;
     right: 0px;
     top: 0px;
     bottom: 0px;
     margin: 100px;
-    margin-bottom: 100px;
+    margin-bottom: 200px;
     border-radius: 5px;
     pointer-events: none;
     transition: all 0.1s ease-out;
@@ -24,6 +25,7 @@ spawnmenu {
         backdrop-filter: blur($blur-spawnmenu);
         border-radius: 5;
 
+
         button {
             padding: 6px 5px;
             margin-right: 10px;
@@ -34,9 +36,8 @@ spawnmenu {
             color: #fff;
             cursor: pointer;
             //border-radius: 5px;
-            
             label {
-                // text-shadow: 1px 1px 4px rgba( black, 0.2 );
+                //text-shadow: 1px 1px 4px rgba( black, 0.2 );
             }
 
             &:hover {
@@ -47,8 +48,8 @@ spawnmenu {
                 transform: scale( 1 );
                 opacity: 1;
                 color: #fff;
-                background-color: rgba( $base-color, 0.5 );
-                //	background-color: #fff;//( #3273eb, 0.2 );
+				background-color: rgba( $base-color, 0.5 );
+                //  background-color: #fff;//( #3273eb, 0.2 );
                 //color: #3273eb;
             }
         }
@@ -78,53 +79,98 @@ spawnmenu {
         transition: all 0.3s ease-in;
 
         .body {
-            //	background-color: rgba( #333, 0.95 );
+            //  background-color: rgba( #333, 0.95 );
             flex-grow: 1;
-            border-radius: 5px;
-            background-color: rgba( rgb(17, 17, 17), 0.3 );
-            // background-image: url('https://i.imgur.com/ZnxyBQt.png');
-            // background-size: 120px;
-            // background-repeat: no-repeat;
-            // background-position: 50% 15;
-            backdrop-filter: blur($blur-spawnmenu);
+            border-radius: 10px;
+            background-color: rgba( #111, 0.7 );
             padding: 10px;
 
+            .page {
+                display: none;
+
+                Image {
+                    width: 64px;
+                    height: 64px;
+                }
+
+                &.visible {
+                    display: flex;
+                }
+            }
+
             .toollist {
-                flex-direction: column;
-                width: 150px;
-                color: white;
-                background-color: rgba( rgb(20, 20, 20), 0.2 );
-                padding: 5px;
+                flex-direction: row;
+                width: 425px;
+                color: #aaa;
+
+                .toolpanel {
+                    margin-left: 20px;
+                    width: 300px;
+                }
 
                 button {
                     padding: 3px 10px;
                     font-size: 11px;
                     transition: all 0.2s ease-out;
                     cursor: pointer;
-                    background-color: rgba( rgb(34, 34, 34), 0.3 );
+					background-color: rgba( rgb(34, 34, 34), 0.3 );
                     margin: 0.5px;
 
                     &:hover {
                         //border-left: 3px solid #3273eb;
-                        color: rgb(211, 211, 211);
-                        background-color: rgba( $base-color, 0.3 );
+						background-color: rgba( $base-color, 0.3 );
+                        color: white;
                     }
 
                     &.active {
                         //border-left: 5px solid #3273eb;
-                        background-color: rgba( $base-color, 0.5 );
+						background-color: rgba( $base-color, 0.5 );
                         color: white;
                     }
                 }
             }
 
-            .inspector {
-                //background-color: rgba( #111, 0.7 );
-                flex-grow: 1;
-                margin-left: 5px;
-                border-radius: 0 5px 5px 0;
+            .util {
+                flex-direction: column;
+                color: #aaa;
+
+                button {
+                    padding: 3px 10px;
+                    transition: all 0.2s ease-out;
+                    cursor: pointer;
+
+                    label {
+                        opacity: 1;
+                    }
+
+                    &:hover {
+                        //border-left: 3px solid #3273eb;
+                        color: white;
+                    }
+
+                    &.active {
+                        //border-left: 5px solid #3273eb;
+                        color: white;
+                    }
+                }
+
+                Label {
+                    opacity: 0.5;
+                }
             }
         }
+    }
+}
+
+.groupname, .title {
+    color: #eee;
+}
+
+.groups {
+    flex-direction: column;
+
+    .group {
+        flex-direction: column;
     }
 }
 
@@ -133,7 +179,7 @@ spawnmenu {
     transition: all 0.2s ease-out;
     pointer-events: all;
     opacity: 1;
-    // transform: scale( 1 );
+    transform: scale( 1 );
 
     .left, .right {
         left: 0;
@@ -150,7 +196,6 @@ spawnmenu {
     }
 
     .canvas {
-        overflow: scroll;
         width: 100%;
         flex-grow: 1;
         flex-wrap: wrap;
@@ -158,12 +203,18 @@ spawnmenu {
         margin: 10px;
         border-radius: 5px;
 
+        &.entities {
+            .cell {
+                padding-bottom: 12px;
+            }
+        }
+
         .cell {
             padding: 5px;
         }
 
         .icon {
-            border-radius: 5px;
+            border-radius: 16px;
             color: rgba( #fff, 0.5 );
             font-size: 12px;
             text-align: center;
@@ -174,19 +225,13 @@ spawnmenu {
             background-size: cover;
             background-color: rgba(black, 0.1);
             background-image: url( /entity/spawnicon.png );
-            border: 3px solid rgba(87, 87, 87, 0.815);
-            transition: border 0.3s ease-out;
 
             label {
-                display: none;
                 font-size: 9px;
                 position: absolute;
-                bottom: -5px;
+                bottom: -17px;
                 left: 0;
                 right: 0;
-                border-radius: 0 0 4px 4px;
-                background-color: rgba(87, 87, 87, 0.815);
-                transition: border 0.3s ease-out;
                 pointer-events: none;
             }
 
@@ -198,18 +243,35 @@ spawnmenu {
             &:active {
             }
         }
+    }
+}
 
-        .icon:hover {
-            transition: all 0.3s ease-out;
-            border: 3px solid $base-color;
-            label {
-                transition: all 0.3s ease-out;
-                bottom: 0;
-                display: flex;
-                background-color: $base-color;
-            }
+SpawnList {
+    .canvas {
+        overflow: scroll;
+    }
+}
+
+EntityList {
+    overflow: scroll;
+    flex-direction: column;
+    color: white;
+
+    .group {
+        flex-direction: column;
+
+        .title {
+            color: white;
         }
 
-        
+        .entities {
+            overflow: visible;
+            justify-content: start;
+            flex-wrap: wrap;
+        }
+    }
+
+    .icon {
+        margin-right: 8px;
     }
 }
