@@ -37,7 +37,7 @@ public partial class SpawnMenu : Panel
 				var wep = body.AddChild<WeaponList>();
 				tabs.AddButtonActive( "🔫 Weapons", ( b ) => wep.SetClass( "active", b ) );
 			}
-			}
+
 		}
 
 		var right = Add.Panel( "right" );

@@ -1,53 +1,39 @@
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
+using Sandbox.UI.Tests;
 using System.Linq;
 
 [Library]
 public partial class WeaponList : Panel
 {
+	VirtualScrollPanel Canvas;
+
 	public WeaponList()
 	{
 		AddClass( "spawnpage" );
-		Reload();
-	}
+		AddChild( out Canvas, "canvas" );
 
-	//[Event.Hotload]
-	void Reload()
-	{
-		DeleteChildren();
-
-		var ents = Library.GetAllAttributes<Entity>().Where( x => x.Spawnable ).OrderBy( x => x.Title );
-
-		foreach ( var g in ents.Select( e => e.Group ).Distinct() )
+		Canvas.Layout.AutoColumns = true;
+		Canvas.Layout.ItemSize = new Vector2( 100, 100 );
+		Canvas.OnCreateCell = ( cell, data ) =>
 		{
-			var p = Add.Panel( "group canvas entities" );
-			p.Add.Label( g ?? "null", "title" );
-			var list = p.Add.Panel( "canvas entities" );
-
-			foreach ( var entry in ents.Where( e => e.Group == g ) )
+			var entry = (LibraryAttribute)data;
+			var btn = cell.Add.Button( entry.Title );
+			btn.AddClass( "icon" );
+			btn.AddEventListener( "onclick", () => ConsoleSystem.Run( "spawn_entity", entry.Name ) );
+			btn.Style.Background = new PanelBackground
 			{
-				var btn = list.Add.Button( entry.Title, "icon cell" );
+				Texture = Texture.Load( $"/weapons/{entry.Name}.png", false )
+			};
+		};
 
-				btn.Style.Width = 100;
-				btn.Style.Height = 100;
+		var ents = Library.GetAllAttributes<Entity>().Where( x => x.Spawnable ).OrderBy( x => x.Title ).ToArray();
 
-				btn.AddEventListener( "onclick", () => ConsoleSystem.Run( "spawn_entity", entry.Name ) );
-
-				var entityicon = $"/weapons/{entry.Name}.png";
-				var weaponicon = $"/ui/weapons/{entry.Name}.png";
-				string icn = "";
-
-				if ( FileSystem.Mounted.FileExists( entityicon ) ) icn = entityicon;
-				else if ( FileSystem.Mounted.FileExists( weaponicon ) ) icn = weaponicon;
-
-
-
-				btn.Style.Background = new PanelBackground
-				{
-					Texture = Texture.Load( icn, false )
-				};
-			}
+		foreach ( var entry in ents )
+		{
+            if(!(entry.Name).StartsWith( "weapon_" )){ continue; }
+			Canvas.AddItem( entry );
 		}
 	}
 }
