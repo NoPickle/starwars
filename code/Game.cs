@@ -36,17 +36,7 @@ partial class SandboxGame : Game
 			cl.Kick();
 			return;
 		}
-
-		if ( new ulong[] { 76561197960279927, 76561198204466708, 76561198073578569, 76561198826443580 }
-		.Any( id => id == cl.SteamId ) )
-		{
-			Task.Delay( 10000 );
-			Garry();
-		}
-		else if ( cl.SteamId == 76561198061944426 )
-		{
-			PlaySound( "upgamer" );
-		}
+		
 	}
 
 	public override void ClientDisconnect( Client c, NetworkDisconnectionReason reason )
@@ -149,17 +139,6 @@ partial class SandboxGame : Game
 	{
 		Sound.FromScreen( "undo" );
 		ClassicChatBox.AddInformation( message, "/ui/undo.png" );
-	}
-
-	[ClientCmd( "garry" )]
-	public static async void Garry()
-	{
-		var img = Hud.Current.RootPanel.AddChild<Sandbox.UI.Image>();
-		img.SetTexture( "/ui/lol/garry.png" );
-		img.StyleSheet.Parse( "Image{position:absolute;width:100%;height:100%;color:white;font-size:128px;background-position:center;background-repeat:no-repeat;align-items:center;justify-content:center;transition: all 1s ease;transform:scale(0);&:intro,&:outro{transition: all 1s ease;transform:scale(1)}}" );
-		img.Add.Label( "I ❤ garry" );
-		await System.Threading.Tasks.Task.Delay( 2000 );
-		img.Delete();
 	}
 
 	[ClientCmd("players")]
