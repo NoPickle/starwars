@@ -163,5 +163,17 @@ InventoryIcon
 			padding: 5px;
 			bottom: 0;
 		}
+		
+		text.title
+		{
+			font-family: Poppins;
+			font-size: 50px;
+			font-weight: 900;
+			color: $white;
+			position: absolute;
+			left: 100px;
+			top: 100px;
+			text-shadow: 2px 2px 10px rgba( $black, 0.8 );
+		}
 	}
 }
