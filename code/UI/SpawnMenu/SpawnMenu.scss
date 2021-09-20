@@ -226,6 +226,7 @@ spawnmenu {
             background-size: cover;
             background-color: rgba(black, 0.1);
             background-image: url( /entity/spawnicon.png );
+            border: 3px solid rgba(87, 87, 87, 0.815);
             transition: border 0.3s ease-out;
 
             label {
@@ -251,7 +252,7 @@ spawnmenu {
         }
         .icon:hover {
             transition: all 0.3s ease-out;
-            border: 4px solid $base-color;
+            border: 3px solid $base-color;
             label {
                 transition: all 0.3s ease-out;
                 bottom: 0;
