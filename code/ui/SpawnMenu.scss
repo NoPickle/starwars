@@ -63,6 +63,7 @@ spawnmenu {
         .body {
             border-radius: 10px;
             background-color: rgba( #111, 0.7 );
+            backdrop-filter: blur($blur-spawnmenu);
             flex-grow: 1;
         }
     }
@@ -80,6 +81,7 @@ spawnmenu {
             flex-grow: 1;
             border-radius: 10px;
             background-color: rgba( #111, 0.7 );
+            backdrop-filter: blur($blur-spawnmenu);
             padding: 10px;
 
 
@@ -218,6 +220,17 @@ spawnmenu {
             }
 
             &:active {
+            }
+        }
+        
+        .icon:hover {
+            transition: all 0.3s ease-out;
+            border: 3px solid $base-color;
+            label {
+                transition: all 0.3s ease-out;
+                bottom: 0;
+                display: flex;
+                background-color: $base-color;
             }
         }
     }
