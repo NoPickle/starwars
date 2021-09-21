@@ -31,9 +31,6 @@ public partial class SpawnMenu : Panel
 
 				var ents = body.AddChild<EntityList>();
 				tabs.AddButtonActive( "🎈 Entities", ( b ) => ents.SetClass( "active", b ) );
-
-				var ents = body.AddChild<StarWarsList>();
-				tabs.AddButtonActive( "🛡️ StarWars", ( b ) => props.SetClass( "active", b ) );
 			}
 		}
 
