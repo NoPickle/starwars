@@ -18,14 +18,14 @@ public partial class StarList : Panel
 		{
 			var file = (string)data;
 			var panel = cell.Add.Panel( "icon" );
-			panel.AddEventListener( "onclick", () => ConsoleSystem.Run( "spawn", "starwars/" + file ) );
+			panel.AddEventListener( "onclick", () => ConsoleSystem.Run( "spawn", "rud3r/" + file ) );
 			panel.Style.Background = new PanelBackground
 			{
-				Texture = Texture.Load( $"//starwars/{file}_c.png", false )
+				Texture = Texture.Load( $"/rud3r/{file}_r.png", false )
 			};
 		};
 
-		foreach ( var file in FileSystem.Mounted.FindFile( "starwars", "*.vmdl_c.png", true ) )
+		foreach ( var file in FileSystem.Mounted.FindFile( "rud3r", "*.vmdl_r.png", true ) )
 		{
 			if ( string.IsNullOrWhiteSpace( file ) ) continue;
 			if ( file.Contains( "_lod0" ) ) continue;
