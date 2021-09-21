@@ -3,6 +3,14 @@
 [Library( "sandbox", Title = "Sandbox" )]
 partial class SandboxGame : Game
 {
+	public SandboxGame()
+	{
+		if ( IsServer )
+		{
+			// Create the HUD
+			_ = new SandboxHud();
+		}
+	}
 
 	public override void ClientJoined( Client cl )
 	{
