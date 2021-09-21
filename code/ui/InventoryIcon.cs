@@ -2,31 +2,23 @@
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
-using System;
 
-class InventoryIcon : Panel
+public class InventoryIcon : Panel
 {
-	public BaseDmWeapon Weapon;
-	public Panel Icon;
+	public Entity TargetEnt;
+	public Label Label;
+	public Label Number;
 
-	public InventoryIcon( BaseDmWeapon weapon )
+	public InventoryIcon( int i, Panel parent )
 	{
-		Weapon = weapon;
-		Icon = Add.Panel( "icon" );
-		AddClass( weapon.ClassInfo.Name );
+		Parent = parent;
+		Label = Add.Label( "empty", "item-name" );
+		Number = Add.Label( $"{i}", "slot-number" );
 	}
 
-	internal void TickSelection( BaseDmWeapon selectedWeapon )
+	public void Clear()
 	{
-		SetClass( "active", selectedWeapon == Weapon );
-		SetClass( "empty", !Weapon?.IsUsable() ?? true );
-	}
-
-	public override void Tick()
-	{
-		base.Tick();
-
-		if ( !Weapon.IsValid() || Weapon.Owner != Local.Pawn )
-			Delete();
+		Label.Text = "";
+		SetClass( "active", false );
 	}
 }

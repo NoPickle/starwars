@@ -1,18 +1,49 @@
 ﻿using Sandbox;
-using System;
-using System.Linq;
-using System.Numerics;
-using System.Threading;
 
-partial class DeathmatchPlayer : Player
+partial class SandboxPlayer : Player
 {
-	TimeSince timeSinceDropped;
+	private TimeSince timeSinceDropped;
+	private TimeSince timeSinceJumpReleased;
 
-	public bool SupressPickupNotices { get; private set; }
+	private DamageInfo lastDamage;
 
-	public DeathmatchPlayer()
+	[Net] public PawnController VehicleController { get; set; }
+	[Net] public PawnAnimator VehicleAnimator { get; set; }
+	[Net, Predicted] public ICamera VehicleCamera { get; set; }
+	[Net, Predicted] public Entity Vehicle { get; set; }
+	[Net, Predicted] public ICamera MainCamera { get; set; }
+
+	public ICamera LastCamera { get; set; }
+
+
+	/// <summary>
+	/// The clothing container is what dresses the citizen
+	/// </summary>
+	public Clothing.Container Clothing = new();
+
+	/// <summary>
+	/// Default init
+	/// </summary>
+	public SandboxPlayer()
 	{
-		Inventory = new DmInventory( this );
+		Inventory = new Inventory( this );
+	}
+
+	/// <summary>
+	/// Initialize using this client
+	/// </summary>
+	public SandboxPlayer( Client cl ) : this()
+	{
+		// Load clothing from client data
+		Clothing.LoadFromClient( cl );
+	}
+
+	public override void Spawn()
+	{
+		MainCamera = new FirstPersonCamera();
+		LastCamera = MainCamera;
+
+		base.Spawn();
 	}
 
 	public override void Respawn()
@@ -21,59 +52,105 @@ partial class DeathmatchPlayer : Player
 
 		Controller = new WalkController();
 		Animator = new StandardPlayerAnimator();
-		Camera = new FirstPersonCamera();
-		  
-		EnableAllCollisions = true; 
-		EnableDrawing = true; 
+
+		MainCamera = LastCamera;
+		Camera = MainCamera;
+
+		if ( DevController is NoclipController )
+		{
+			DevController = null;
+		}
+
+		EnableAllCollisions = true;
+		EnableDrawing = true;
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
 
-		Dress();
-		ClearAmmo();
+		Clothing.DressEntity( this );
 
-		SupressPickupNotices = true;
-
-		Inventory.Add( new Pistol(), true );
-		Inventory.Add( new Shotgun() );
-		Inventory.Add( new SMG() );
-		Inventory.Add( new Crossbow() );
-
-		GiveAmmo( AmmoType.Pistol, 100 );
-		GiveAmmo( AmmoType.Buckshot, 8 );
-		GiveAmmo( AmmoType.Crossbow, 4 );
-
-		SupressPickupNotices = false;
-		Health = 100;
+		Inventory.Add( new PhysGun(), true );
+		Inventory.Add( new GravGun() );
+		Inventory.Add( new Tool() );
+		Inventory.Add( new Pistol() );
+		Inventory.Add( new Flashlight() );
 
 		base.Respawn();
 	}
+
 	public override void OnKilled()
 	{
 		base.OnKilled();
 
-		Inventory.DropActive();
-		Inventory.DeleteContents();
+		if ( lastDamage.Flags.HasFlag( DamageFlags.Vehicle ) )
+		{
+			Particles.Create( "particles/impact.flesh.bloodpuff-big.vpcf", lastDamage.Position );
+			Particles.Create( "particles/impact.flesh-big.vpcf", lastDamage.Position );
+			PlaySound( "kersplat" );
+		}
 
-		BecomeRagdollOnClient( LastDamage.Force, GetHitboxBone( LastDamage.HitboxIndex ) );
+		VehicleController = null;
+		VehicleAnimator = null;
+		VehicleCamera = null;
+		Vehicle = null;
 
+		BecomeRagdollOnClient( Velocity, lastDamage.Flags, lastDamage.Position, lastDamage.Force, GetHitboxBone( lastDamage.HitboxIndex ) );
+		LastCamera = MainCamera;
+		MainCamera = new SpectateRagdollCamera();
+		Camera = MainCamera;
 		Controller = null;
-		Camera = new SpectateRagdollCamera();
 
 		EnableAllCollisions = false;
 		EnableDrawing = false;
+
+		Inventory.DropActive();
+		Inventory.DeleteContents();
 	}
 
+	public override void TakeDamage( DamageInfo info )
+	{
+		if ( GetHitboxGroup( info.HitboxIndex ) == 1 )
+		{
+			info.Damage *= 10.0f;
+		}
+
+		lastDamage = info;
+
+		TookDamage( lastDamage.Flags, lastDamage.Position, lastDamage.Force );
+
+		base.TakeDamage( info );
+	}
+
+	[ClientRpc]
+	public void TookDamage( DamageFlags damageFlags, Vector3 forcePos, Vector3 force )
+	{
+	}
+
+	public override PawnController GetActiveController()
+	{
+		if ( VehicleController != null ) return VehicleController;
+		if ( DevController != null ) return DevController;
+
+		return base.GetActiveController();
+	}
+
+	public override PawnAnimator GetActiveAnimator()
+	{
+		if ( VehicleAnimator != null ) return VehicleAnimator;
+
+		return base.GetActiveAnimator();
+	}
+
+	public ICamera GetActiveCamera()
+	{
+		if ( VehicleCamera != null ) return VehicleCamera;
+
+		return MainCamera;
+	}
 
 	public override void Simulate( Client cl )
 	{
-		//if ( cl.NetworkIdent == 1 )
-		//	return;
-
 		base.Simulate( cl );
 
-		//
-		// Input requested a weapon switch
-		//
 		if ( Input.ActiveChild != null )
 		{
 			ActiveChild = Input.ActiveChild;
@@ -82,57 +159,58 @@ partial class DeathmatchPlayer : Player
 		if ( LifeState != LifeState.Alive )
 			return;
 
+		if ( VehicleController != null && DevController is NoclipController )
+		{
+			DevController = null;
+		}
+
+		var controller = GetActiveController();
+		if ( controller != null )
+			EnableSolidCollisions = !controller.HasTag( "noclip" );
+
 		TickPlayerUse();
+		SimulateActiveChild( cl, ActiveChild );
 
 		if ( Input.Pressed( InputButton.View ) )
 		{
-			if ( Camera is ThirdPersonCamera )
+			if ( MainCamera is not FirstPersonCamera )
 			{
-				Camera = new FirstPersonCamera();
+				MainCamera = new FirstPersonCamera();
 			}
 			else
 			{
-				Camera = new ThirdPersonCamera();
+				MainCamera = new ThirdPersonCamera();
 			}
 		}
+
+		Camera = GetActiveCamera();
 
 		if ( Input.Pressed( InputButton.Drop ) )
 		{
 			var dropped = Inventory.DropActive();
 			if ( dropped != null )
 			{
-				if ( dropped.PhysicsGroup != null )
-				{
-					dropped.PhysicsGroup.Velocity = Velocity + (EyeRot.Forward + EyeRot.Up) * 300;
-				}
+				dropped.PhysicsGroup.ApplyImpulse( Velocity + EyeRot.Forward * 500.0f + Vector3.Up * 100.0f, true );
+				dropped.PhysicsGroup.ApplyAngularImpulse( Vector3.Random * 100.0f, true );
 
 				timeSinceDropped = 0;
-				SwitchToBestWeapon();
 			}
 		}
 
-		SimulateActiveChild( cl, ActiveChild );
-
-		//
-		// If the current weapon is out of ammo and we last fired it over half a second ago
-		// lets try to switch to a better wepaon
-		//
-		if ( ActiveChild is BaseDmWeapon weapon && !weapon.IsUsable() && weapon.TimeSincePrimaryAttack > 0.5f && weapon.TimeSinceSecondaryAttack > 0.5f )
+		if ( Input.Released( InputButton.Jump ) )
 		{
-			SwitchToBestWeapon();
+			if ( timeSinceJumpReleased < 0.3f )
+			{
+				Game.Current?.DoPlayerNoclip( cl );
+			}
+
+			timeSinceJumpReleased = 0;
 		}
-	}
 
-	public void SwitchToBestWeapon()
-	{
-		var best = Children.Select( x => x as BaseDmWeapon )
-			.Where( x => x.IsValid() && x.IsUsable() )
-			.OrderByDescending( x => x.BucketWeight )
-			.FirstOrDefault();
-
-		if ( best == null ) return;
-
-		ActiveChild = best;
+		if ( Input.Left != 0 || Input.Forward != 0 )
+		{
+			timeSinceJumpReleased = 1;
+		}
 	}
 
 	public override void StartTouch( Entity other )
@@ -142,117 +220,39 @@ partial class DeathmatchPlayer : Player
 		base.StartTouch( other );
 	}
 
-	Rotation lastCameraRot = Rotation.Identity;
-
-	public override void PostCameraSetup( ref CameraSetup setup )
+	[ServerCmd( "inventory_current" )]
+	public static void SetInventoryCurrent( string entName )
 	{
-		base.PostCameraSetup( ref setup );
+		var target = ConsoleSystem.Caller.Pawn;
+		if ( target == null ) return;
 
-		if ( lastCameraRot == Rotation.Identity )
-			lastCameraRot = setup.Rotation;
+		var inventory = target.Inventory;
+		if ( inventory == null )
+			return;
 
-		var angleDiff = Rotation.Difference( lastCameraRot, setup.Rotation );
-		var angleDiffDegrees = angleDiff.Angle();
-		var allowance = 20.0f;
-
-		if ( angleDiffDegrees > allowance )
+		for ( int i = 0; i < inventory.Count(); ++i )
 		{
-			// We could have a function that clamps a rotation to within x degrees of another rotation?
-			lastCameraRot = Rotation.Lerp( lastCameraRot, setup.Rotation, 1.0f - (allowance / angleDiffDegrees) );
-		}
-		else
-		{
-			//lastCameraRot = Rotation.Lerp( lastCameraRot, Camera.Rotation, Time.Delta * 0.2f * angleDiffDegrees );
-		}
+			var slot = inventory.GetSlot( i );
+			if ( !slot.IsValid() )
+				continue;
 
-		// uncomment for lazy cam
-		//camera.Rotation = lastCameraRot;
+			if ( !slot.ClassInfo.IsNamed( entName ) )
+				continue;
 
-		if ( setup.Viewer != null )
-		{
-			AddCameraEffects( ref setup );
+			inventory.SetActiveSlot( i, false );
+
+			break;
 		}
 	}
 
-	float walkBob = 0;
-	float lean = 0;
-	float fov = 0;
+	// TODO
 
-	private void AddCameraEffects( ref CameraSetup setup )
-	{
-		var speed = Velocity.Length.LerpInverse( 0, 320 );
-		var forwardspeed = Velocity.Normal.Dot( setup.Rotation.Forward );
-
-		var left = setup.Rotation.Left;
-		var up = setup.Rotation.Up;
-
-		if ( GroundEntity != null )
-		{
-			walkBob += Time.Delta * 25.0f * speed;
-		}
-
-		setup.Position += up * MathF.Sin( walkBob ) * speed * 2;
-		setup.Position += left * MathF.Sin( walkBob * 0.6f ) * speed * 1;
-
-		// Camera lean
-		lean = lean.LerpTo( Velocity.Dot( setup.Rotation.Right ) * 0.03f, Time.Delta * 15.0f );
-
-		var appliedLean = lean;
-		appliedLean += MathF.Sin( walkBob ) * speed * 0.2f;
-		setup.Rotation *= Rotation.From( 0, 0, appliedLean );
-
-		speed = (speed - 0.7f).Clamp( 0, 1 ) * 3.0f;
-
-		fov = fov.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 2.0f );
-
-		setup.FieldOfView += fov;
-
-	//	var tx = new Sandbox.UI.PanelTransform();
-	//	tx.AddRotation( 0, 0, lean * -0.1f );
-
-	//	Hud.CurrentPanel.Style.Transform = tx;
-	//	Hud.CurrentPanel.Style.Dirty(); 
-
-	}
-
-	DamageInfo LastDamage;
-
-	public override void TakeDamage( DamageInfo info )
-	{
-		LastDamage = info;
-
-		// hack - hitbox 0 is head
-		// we should be able to get this from somewhere
-		if ( info.HitboxIndex == 0 )
-		{
-			info.Damage *= 2.0f;
-		}
-
-		base.TakeDamage( info );
-
-		if ( info.Attacker is DeathmatchPlayer attacker && attacker != this )
-		{
-			// Note - sending this only to the attacker!
-			attacker.DidDamage( To.Single( attacker ), info.Position, info.Damage, Health.LerpInverse( 100, 0 ) );
-
-			TookDamage( To.Single( this ), info.Weapon.IsValid() ? info.Weapon.Position : info.Attacker.Position );
-		}
-	}
-
-	[ClientRpc]
-	public void DidDamage( Vector3 pos, float amount, float healthinv )
-	{
-		Sound.FromScreen( "dm.ui_attacker" )
-			.SetPitch( 1 + healthinv * 1 );
-
-		HitIndicator.Current?.OnHit( pos, amount );
-	}
-
-	[ClientRpc]
-	public void TookDamage( Vector3 pos )
-	{
-		//DebugOverlay.Sphere( pos, 5.0f, Color.Red, false, 50.0f );
-
-		DamageIndicator.Current?.OnHit( pos );
-	}
+	//public override bool HasPermission( string mode )
+	//{
+	//	if ( mode == "noclip" ) return true;
+	//	if ( mode == "devcam" ) return true;
+	//	if ( mode == "suicide" ) return true;
+	//
+	//	return base.HasPermission( mode );
+	//	}
 }
