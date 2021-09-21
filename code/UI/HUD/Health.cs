@@ -18,6 +18,6 @@ public class Health : Panel
 
 		Label.Text = $"♥ {player.Health.CeilToInt()}";
 		Label.SetClass("dying", player.Health <= 20);
-		Label.SetClass("hidden", player.Health == 100);
+		Label.SetClass("hidden", player.Health == 50);
 	}
 }
