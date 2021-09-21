@@ -1,21 +1,21 @@
 ﻿using Sandbox;
 
 [Library( "sandbox", Title = "Sandbox" )]
-partial class SandboxGame : Game
+partial class DeathmatchGame : Game
 {
-	public SandboxGame()
+	public DeathmatchGame()
 	{
 		if ( IsServer )
 		{
 			// Create the HUD
-			_ = new SandboxHud();
+			_ = new DeathmatchHud();
 		}
 	}
 
 	public override void ClientJoined( Client cl )
 	{
 		base.ClientJoined( cl );
-		var player = new SandboxPlayer( cl );
+		var player = new DeathmatchPlayer( cl );
 		player.Respawn();
 
 		cl.Pawn = player;
