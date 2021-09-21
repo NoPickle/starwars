@@ -2,13 +2,13 @@
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
-public class Vitals : Panel
+public class Health : Panel
 {
-	public Label Health;
+	public Label Label;
 
-	public Vitals()
+	public Health()
 	{
-		Health = Add.Label( "100", "health" );
+		Label = Add.Label( "100", "value" );
 	}
 
 	public override void Tick()
@@ -16,7 +16,7 @@ public class Vitals : Panel
 		var player = Local.Pawn;
 		if ( player == null ) return;
 
-		Health.Text = $"{player.Health.CeilToInt()}";
-		Health.SetClass( "danger", player.Health < 40.0f );
+		Label.Text = $"{player.Health.CeilToInt()}";
+		Label.SetClass( "danger", player.Health < 40.0f );
 	}
 }
