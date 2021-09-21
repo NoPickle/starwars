@@ -4,7 +4,7 @@ using System;
 
 namespace Sandbox.Tools
 {
-	[Library( "tool_platespawner", Title = "Plate Spanwer", Description = "Spawn plates", Group = "custo" )]
+	[Library( "tool_platespawner", Title = "Plate Spanwer", Description = "Spawn plates", Group = "custom" )]
 	class PlateSpawner : BaseTool
 	{
 		[ConVar.ClientData( "tool_platespawner_x" )]

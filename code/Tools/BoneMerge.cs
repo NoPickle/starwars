@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 namespace Sandbox.Tools
 {
-	[Library( "tool_bone_merge", Title = "Bone Merge", Description = "Merges the bones of 2 objects. Right click selects self", Group = "custo" )]
+	[Library( "tool_bone_merge", Title = "Bone Merge", Description = "Merges the bones of 2 objects. Right click selects self", Group = "custom" )]
 	public partial class BoneMergeTool : BaseTool
 	{
 		private ModelEntity target;
