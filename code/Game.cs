@@ -1,51 +1,24 @@
 ﻿using Sandbox;
-using Sandbox.UI.Construct;
-using System.Linq;
 
 [Library( "sandbox", Title = "Sandbox" )]
 partial class SandboxGame : Game
 {
 	public SandboxGame()
 	{
-		Crosshair.UseReloadTimer = true;
-		Weapon.UseClientSideHitreg = true;
 		if ( IsServer )
 		{
 			// Create the HUD
-			_ = new Hud();
+			_ = new SandboxHud();
 		}
 	}
-	public override void DoPlayerDevCam( Client player )
-	{
-		Host.AssertServer();
-		player.DevCamera = player.DevCamera == null ? new DevCamera() : null;
-	}
+
 	public override void ClientJoined( Client cl )
 	{
-		if ( cl.IsListenServerHost )
-			cl.SetScore( "ishost", true );
-
 		base.ClientJoined( cl );
-		var player = new SandboxPlayer();
+		var player = new SandboxPlayer( cl );
 		player.Respawn();
 
 		cl.Pawn = player;
-
-		if ( cl.IsBanned() )
-		{
-			cl.Kick();
-			return;
-		}
-		
-	}
-
-	public override void ClientDisconnect( Client c, NetworkDisconnectionReason reason )
-	{
-		base.ClientDisconnect( c, reason );
-
-		var us = Undo.GetUndos( c );
-		foreach ( var u in us ) u.DoUndo();
-		Undo.Undos.Remove( c );
 	}
 
 	protected override void OnDestroy()
@@ -67,23 +40,11 @@ partial class SandboxGame : Game
 			.Run();
 
 		var ent = new Prop();
+		ent.Position = tr.EndPos;
 		ent.Rotation = Rotation.From( new Angles( 0, owner.EyeRot.Angles().yaw, 0 ) ) * Rotation.FromAxis( Vector3.Up, 180 );
 		ent.SetModel( modelname );
 		ent.Position = tr.EndPos - Vector3.Up * ent.CollisionBounds.Mins.z;
-
-		// Drop to floor
-		if ( ent.PhysicsBody != null && ent.PhysicsGroup.BodyCount == 1 )
-		{
-			var p = ent.PhysicsBody.FindClosestPoint( tr.EndPos );
-
-			var delta = p - tr.EndPos;
-			ent.PhysicsBody.Position -= delta;
-			//DebugOverlay.Line( p, tr.EndPos, 10, false );
-		}
-
-		Undo.Add( ConsoleSystem.Caller, new ModelUndo( ent ) );
 	}
-
 
 	[ServerCmd( "spawn_entity" )]
 	public static void SpawnEntity( string entName )
@@ -114,7 +75,7 @@ partial class SandboxGame : Game
 		ent.Position = tr.EndPos;
 		ent.Rotation = Rotation.From( new Angles( 0, owner.EyeRot.Angles().yaw, 0 ) );
 
-		Undo.Add( ConsoleSystem.Caller, new EntityUndo( ent ) );
+		//Log.Info( $"ent: {ent}" );
 	}
 
 	public override void DoPlayerNoclip( Client player )
@@ -134,19 +95,9 @@ partial class SandboxGame : Game
 		}
 	}
 
-	[ClientRpc]
-	public static void ShowUndo( string message )
+	[ClientCmd( "debug_write" )]
+	public static void Write()
 	{
-		Sound.FromScreen( "undo" );
-		ClassicChatBox.AddInformation( message, "/ui/undo.png" );
-	}
-
-	[ClientCmd("players")]
-	public static void ListPlayers()
-	{
-		foreach(var c in Client.All)
-		{
-			Log.Info( c.Name );
-		}
+		ConsoleSystem.Run( "quit" );
 	}
 }

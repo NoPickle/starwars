@@ -83,9 +83,6 @@
 				}
 
 				ent.SetModel( "models/thruster/thrusterprojector.vmdl" );
-
-				if ( Host.IsServer )
-					Undo.Add( Owner.GetClientOwner(), new EntityUndo( ent ) );
 			}
 		}
 	}

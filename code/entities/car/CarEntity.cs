@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-[Library( "ent_car", Title = "Car", Spawnable = true, Group = "Vehicles" )]
+[Library( "ent_car", Title = "Car", Spawnable = true )]
 public partial class CarEntity : Prop, IUse
 {
 	[ConVar.Replicated( "debug_car" )]
@@ -9,13 +9,6 @@ public partial class CarEntity : Prop, IUse
 
 	[ConVar.Replicated( "car_accelspeed" )]
 	public static float car_accelspeed { get; set; } = 500.0f;
-
-	public virtual string ModelPath => "entities/modular_vehicle/chassis_2_main.vmdl";
-	public virtual string WheelModelPath => "entities/modular_vehicle/wheel_a.vmdl";
-	public virtual Vector3 SeatPosition => Vector3.Up * 10 + Vector3.Forward * 10;
-	public virtual Vector3 FrontAxlePosition => new Vector3( 1.05f, 0, 0.35f ) * 40.0f;
-	public virtual Vector3 RearAxlePosition => new Vector3( -1.05f, 0, 0.35f ) * 40.0f;
-
 
 	private CarWheel frontLeft;
 	private CarWheel frontRight;
@@ -84,7 +77,9 @@ public partial class CarEntity : Prop, IUse
 	{
 		base.Spawn();
 
-		SetModel( ModelPath );
+		var modelName = "models/car/car.vmdl";
+
+		SetModel( modelName );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
 		SetInteractsExclude( CollisionLayer.Player );
 		EnableSelfCollisions = false;
@@ -100,7 +95,7 @@ public partial class CarEntity : Prop, IUse
 			EnableSelfCollisions = false,
 		};
 
-		trigger.SetModel( ModelPath );
+		trigger.SetModel( modelName );
 		trigger.SetupPhysicsFromModel( PhysicsMotionType.Keyframed, false );
 	}
 
@@ -121,17 +116,17 @@ public partial class CarEntity : Prop, IUse
 			chassis_axle_front.SetModel( "entities/modular_vehicle/chassis_axle_front.vmdl" );
 			chassis_axle_front.Transform = Transform;
 			chassis_axle_front.Parent = this;
-			chassis_axle_front.LocalPosition = FrontAxlePosition;
+			chassis_axle_front.LocalPosition = new Vector3( 1.05f, 0, 0.35f ) * 40.0f;
 
 			{
 				wheel0 = new ModelEntity();
-				wheel0.SetModel( WheelModelPath );
+				wheel0.SetModel( "entities/modular_vehicle/wheel_a.vmdl" );
 				wheel0.SetParent( chassis_axle_front, "Wheel_Steer_R", new Transform( Vector3.Zero, Rotation.From( 0, 180, 0 ) ) );
 			}
 
 			{
 				wheel1 = new ModelEntity();
-				wheel1.SetModel( WheelModelPath );
+				wheel1.SetModel( "entities/modular_vehicle/wheel_a.vmdl" );
 				wheel1.SetParent( chassis_axle_front, "Wheel_Steer_L", new Transform( Vector3.Zero, Rotation.From( 0, 0, 0 ) ) );
 			}
 
@@ -147,7 +142,7 @@ public partial class CarEntity : Prop, IUse
 			chassis_axle_rear.SetModel( "entities/modular_vehicle/chassis_axle_rear.vmdl" );
 			chassis_axle_rear.Transform = Transform;
 			chassis_axle_rear.Parent = this;
-			chassis_axle_rear.LocalPosition = RearAxlePosition;
+			chassis_axle_rear.LocalPosition = new Vector3( -1.05f, 0, 0.35f ) * 40.0f;
 
 			{
 				var chassis_transmission = new ModelEntity();
@@ -157,13 +152,13 @@ public partial class CarEntity : Prop, IUse
 
 			{
 				wheel2 = new ModelEntity();
-				wheel2.SetModel( WheelModelPath );
+				wheel2.SetModel( "entities/modular_vehicle/wheel_a.vmdl" );
 				wheel2.SetParent( chassis_axle_rear, "Axle_Rear_Center", new Transform( Vector3.Left * (0.7f * 40), Rotation.From( 0, 90, 0 ) ) );
 			}
 
 			{
 				wheel3 = new ModelEntity();
-				wheel3.SetModel( WheelModelPath );
+				wheel3.SetModel( "entities/modular_vehicle/wheel_a.vmdl" );
 				wheel3.SetParent( chassis_axle_rear, "Axle_Rear_Center", new Transform( Vector3.Right * (0.7f * 40), Rotation.From( 0, -90, 0 ) ) );
 			}
 		}
@@ -455,17 +450,24 @@ public partial class CarEntity : Prop, IUse
 	private void RemoveDriver( SandboxPlayer player )
 	{
 		driver = null;
+		timeSinceDriverLeft = 0;
+
+		ResetInput();
+
+		if ( !player.IsValid() )
+			return;
+
 		player.Vehicle = null;
 		player.VehicleController = null;
 		player.VehicleAnimator = null;
 		player.VehicleCamera = null;
 		player.Parent = null;
-		player.PhysicsBody.Enabled = true;
-		player.PhysicsBody.Position = player.Position;
 
-		timeSinceDriverLeft = 0;
-
-		ResetInput();
+		if ( player.PhysicsBody.IsValid() )
+		{
+			player.PhysicsBody.Enabled = true;
+			player.PhysicsBody.Position = player.Position;
+		}
 	}
 
 	public bool OnUse( Entity user )
@@ -477,7 +479,7 @@ public partial class CarEntity : Prop, IUse
 			player.VehicleAnimator = new CarAnimator();
 			player.VehicleCamera = new CarCamera();
 			player.Parent = this;
-			player.LocalPosition = SeatPosition;
+			player.LocalPosition = Vector3.Up * 10;
 			player.LocalRotation = Rotation.Identity;
 			player.LocalScale = 1;
 			player.PhysicsBody.Enabled = false;
@@ -563,6 +565,7 @@ public partial class CarEntity : Prop, IUse
 				if ( eventData.Entity.LifeState == LifeState.Dead && eventData.Entity is not SandboxPlayer )
 				{
 					PhysicsBody.Velocity = eventData.PreVelocity;
+					PhysicsBody.AngularVelocity = eventData.PreAngularVelocity;
 				}
 			}
 		}

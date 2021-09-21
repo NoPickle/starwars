@@ -35,7 +35,7 @@
 
 			using ( Prediction.Off() )
 			{
-				if ( !Input.Pressed( InputButton.Attack1 ) && !Input.Pressed( InputButton.Attack2 ) )
+				if ( !Input.Pressed( InputButton.Attack1 ) )
 					return;
 
 				var startPos = Owner.EyePos;
@@ -70,18 +70,14 @@
 					InnerConeAngle = 25,
 					OuterConeAngle = 45,
 					Brightness = 10,
-					Color = Input.Pressed( InputButton.Attack2 )
-						? (Owner as SandboxPlayer).PlayerColor
-						: Color.Random,
-					Rotation = Rotation.Identity
+					Color = Color.Random,
+					Rotation = Rotation.Identity,
+					LightCookie = Texture.Load( "materials/effects/lightcookie.vtex" )
 				};
 
 				lamp.SetModel( Model );
 				lamp.SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
 				lamp.Position = tr.EndPos + -lamp.CollisionBounds.Center + tr.Normal * lamp.CollisionBounds.Size * 0.5f;
-
-				if ( Host.IsServer )
-					Undo.Add( Owner.GetClientOwner(), new EntityUndo( lamp ) );
 			}
 		}
 	}

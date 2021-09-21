@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-[Library( "ent_lamp", Title = "Lamp", Spawnable = true, Group = "Construction" )]
+[Library( "ent_lamp", Title = "Lamp", Spawnable = true )]
 public partial class LampEntity : SpotLightEntity, IUse
 {
 	public override void Spawn()

@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-[Library( "ent_thruster", Title = "Thruster", Group = "Construction" )]
+[Library( "ent_thruster" )]
 public partial class ThrusterEntity : Prop, IUse
 {
 	public float Force = 1000.0f;
@@ -11,7 +11,7 @@ public partial class ThrusterEntity : Prop, IUse
 	public bool Enabled { get; set; } = true;
 
 	[Event.Physics.PostStep]
-	public virtual void OnPostPhysicsStep()
+	protected void ApplyForces()
 	{
 		if ( IsServer && Enabled )
 		{
