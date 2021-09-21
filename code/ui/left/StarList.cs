@@ -25,7 +25,7 @@ public partial class StarList : Panel
 			};
 		};
 
-		foreach ( var file in FileSystem.Mounted.FindFile( "models", "*.vmdl_c.png", true ) )
+		foreach ( var file in FileSystem.Mounted.FindFile( "models/starwars", "*.vmdl_c.png", true ) )
 		{
 			if ( string.IsNullOrWhiteSpace( file ) ) continue;
 			if ( file.Contains( "_lod0" ) ) continue;
