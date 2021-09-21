@@ -8,7 +8,7 @@ public class Health : Panel
 
 	public Health()
 	{
-		Label = Add.Label( "100", "value" );
+		Label = Add.Label( "♥ 100", "value" );
 	}
 
 	public override void Tick()
@@ -16,6 +16,8 @@ public class Health : Panel
 		var player = Local.Pawn;
 		if ( player == null ) return;
 
-		Label.Text = $"{player.Health.CeilToInt()}";
+		Label.Text = $"♥ {player.Health.CeilToInt()}";
+		Label.SetClass("dying", player.Health <= 20);
+		Label.SetClass("hidden", player.Health == 100);
 	}
 }
