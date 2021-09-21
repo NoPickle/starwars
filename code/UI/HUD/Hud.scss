@@ -13,7 +13,7 @@
 
 CurrentTool {
     position: absolute;
-    background: linear-gradient(to right, rgba(rgb(68, 0, 255), 0.5), rgba(black, 0.0));
+    background: linear-gradient(to right, rgba(red, 0.5), rgba(black, 0.0));
     top: 100px;
     left: 0px;
     padding: 30px 70px;
@@ -104,7 +104,7 @@ InventoryIcon {
     }
 
     &.active, &:hover {
-        background-color: rgba( rgb(68, 0, 255), 0.5);
+        background-color: rgba( red, 0.5 );
         transition: all 0.1s ease-out;
         width: 100px;
         height: 100px;
