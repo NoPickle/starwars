@@ -1,15 +1,30 @@
 ﻿Health {
-    position: absolute;
-    backdrop-filter: blur(10px);
-    left: 100px;
-    bottom: 48px;
-    font-size: 40px;
-    font-weight: bold;
-    color: white;
-    height: 80px;
-    padding: 0 20px;
-    align-items: center;
-}
+	position: absolute;
+	//background-color: rgba( black, 0.5 );
+	left: 100px;
+	bottom: 48px;
+	font-size: 80px;
+	font-weight: bold;
+	height: 80px;
+	padding: 0 20px;
+	align-items: center;
+	label {
+		color: #FA3;
+		text-shadow: 0 0 16px #F80, 0 0 2px #F80, 0 0 2px #F80, 0 0 4px #F80;
+		transition: all 0.2s ease-in-out;
+	}
+
+	.dying {
+		color: #F00;
+		text-shadow: 0 0 16px #F00, 0 0 2px #F00, 0 0 2px #F00, 0 0 4px #F00;
+	}
+
+	.hidden {
+		font-size: 40px;
+		left: -50px;
+		bottom: -24px;
+    }
+}    
 
 CurrentTool {
     position: absolute;
