@@ -193,7 +193,7 @@ spawnmenu {
         }
 
         .icon {
-            border-radius: 5px;
+            border-radius: 16px;
             color: rgba( #fff, 0.5 );
             font-size: 12px;
             text-align: center;
@@ -204,6 +204,8 @@ spawnmenu {
             background-size: cover;
             background-color: rgba(black, 0.1);
             background-image: url( /entity/spawnicon.png );
+            border: 3px solid rgba(87, 87, 87, 0.815);
+            transition: border 0.3s ease-out;
 
             label {
                 font-size: 9px;
