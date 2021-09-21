@@ -17,5 +17,6 @@ public class Health : Panel
 		if ( player == null ) return;
 
 		Label.Text = $"{player.Health.CeilToInt()}";
+		Label.SetClass( "danger", player.Health < 40.0f );
 	}
 }
