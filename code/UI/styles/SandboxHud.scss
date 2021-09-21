@@ -20,6 +20,27 @@ Health
 	}
 }
 
+Ammo
+{
+	position: absolute;
+	bottom: 64px;
+	right: 100px;
+	font-size: 64px;
+	color: #ff0;
+	mix-blend-mode: lighten;
+	font-family: Roboto;
+
+	label
+	{
+		text-shadow: 0px 0px 20px #f70a;
+
+		&.danger
+		{
+			color: #f00;
+		}
+	}
+}
+
 CurrentTool
 {
 	position: absolute;
