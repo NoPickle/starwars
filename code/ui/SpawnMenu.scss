@@ -222,7 +222,7 @@ spawnmenu {
             &:active {
             }
         }
-        
+
         .icon:hover {
             transition: all 0.3s ease-out;
             border: 3px solid $base-color;
@@ -230,7 +230,7 @@ spawnmenu {
                 transition: all 0.3s ease-out;
                 bottom: 0;
                 display: flex;
-                background-color: $base-color;
+                background-coor: $base-color;
             }
         }
     }
