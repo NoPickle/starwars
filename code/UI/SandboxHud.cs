@@ -24,6 +24,6 @@ public partial class SandboxHud : HudEntity<RootPanel>
 
 		// NOWE
 
-		RootPanel.AddChild<Crosshair>();
+
 	}
 }
