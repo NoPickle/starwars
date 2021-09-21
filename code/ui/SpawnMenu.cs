@@ -35,7 +35,7 @@ public partial class SpawnMenu : Panel
 				var wep = body.AddChild<WeaponList>();
 				tabs.AddButtonActive( "🔫 Weapons", ( b ) => wep.SetClass( "active", b ) );
 
-				var props = body.AddChild<SpawnList>();
+				var propsr = body.AddChild<SpawnList>();
 				tabs.SelectedButton = tabs.AddButtonActive( "🛡️ StarWars", ( b ) => propsr.SetClass( "active", b ) );				
 
 			}
