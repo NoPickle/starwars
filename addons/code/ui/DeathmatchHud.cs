@@ -6,9 +6,9 @@ using System;
 using System.Threading.Tasks;
 
 [Library]
-public partial class DeathmatchHud : HudEntity<RootPanel>
+public partial class SandboxHud : HudEntity<RootPanel>
 {
-	public DeathmatchHud()
+	public SandboxHud()
 	{
 		if ( !IsClient )
 			return;

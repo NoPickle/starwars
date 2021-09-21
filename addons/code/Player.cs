@@ -4,13 +4,13 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 
-partial class DeathmatchPlayer : Player
+partial class SandboxPlayer : Player
 {
 	TimeSince timeSinceDropped;
 
 	public bool SupressPickupNotices { get; private set; }
 
-	public DeathmatchPlayer()
+	public SandboxPlayer()
 	{
 		Inventory = new DmInventory( this );
 	}
@@ -230,7 +230,7 @@ partial class DeathmatchPlayer : Player
 
 		base.TakeDamage( info );
 
-		if ( info.Attacker is DeathmatchPlayer attacker && attacker != this )
+		if ( info.Attacker is SandboxPlayer attacker && attacker != this )
 		{
 			// Note - sending this only to the attacker!
 			attacker.DidDamage( To.Single( attacker ), info.Position, info.Damage, Health.LerpInverse( 100, 0 ) );
