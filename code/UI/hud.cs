@@ -9,7 +9,7 @@ public partial class hud : HudEntity<RootPanel>
 		if ( !IsClient )
 			return;
 
-		RootPanel.StyleSheet.Load( "/ui/hud.scss" );
+		RootPanel.StyleSheet.Load( "/UI/hud.scss" );
 
 		RootPanel.AddChild<NameTags>();
 		RootPanel.AddChild<CrosshairCanvas>();
