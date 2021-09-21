@@ -36,18 +36,40 @@ public partial class SpawnMenu : Panel
 
 		var right = Add.Panel( "right" );
 		{
-			var tabs = right.Add.Panel( "tabs" );
+			Panel body = null;
+			var tabs = right.Add.ButtonGroup( "tabs" );
 			{
-				tabs.Add.Button( "Tools" ).AddClass( "active" );
-				tabs.Add.Button( "Utility" );
+				tabs.Add.Button( "Tools" ).SetClass( "visible", true );
+				tabs.Add.Button( "Utility" ).SetClass( "visible", false );
+
+				tabs.AddEventListener( "startactive", () =>
+				{
+					if ( body == null ) return;
+					var id = tabs.GetChildIndex( tabs.SelectedButton );
+					foreach ( var c in body?.Children )
+					{
+						var i = c.Parent.GetChildIndex( c );
+						c.SetClass( "visible", i == id ); ;
+					}
+				} );
+
+				tabs.SelectedButton = tabs.GetChild( 0 );
 			}
-			var body = right.Add.Panel( "body" );
+			body = right.Add.Panel( "body" );
 			{
 				toollist = body.Add.Panel( "toollist" );
 				{
 					RebuildToolList();
 				}
 				body.Add.Panel( "inspector" );
+
+				var utils = body.Add.Panel( "page util" );
+				{
+					utils.Add.Button( "Undo", () => ConsoleSystem.Run( "undo" ) );
+					utils.Add.Button( "Undo All", () => ConsoleSystem.Run( "undoall" ) );
+					utils.Add.Button( "(Admin) Cleanup", () => ConsoleSystem.Run( "cleanup" ) );
+					utils.Add.Label( "You can call undo/undoall/cleanup from console too!" );
+				}
 			}
 		}
 

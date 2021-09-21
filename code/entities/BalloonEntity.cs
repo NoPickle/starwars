@@ -4,12 +4,22 @@
 public partial class BalloonEntity : Prop
 {
 	private static float GravityScale => -0.2f;
+	private string Model = "models/citizen_props/balloonregular01.vmdl";
+
+	public BalloonEntity()
+	{
+	}
+
+	public BalloonEntity( string model )
+	{
+		Model = model;
+	}
 
 	public override void Spawn()
 	{
 		base.Spawn();
 
-		SetModel( "models/citizen_props/balloonregular01.vmdl" );
+		SetModel( Model );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic, false );
 		PhysicsBody.GravityScale = GravityScale;
 		RenderColor = Color.Random;

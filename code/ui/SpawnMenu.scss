@@ -1,4 +1,5 @@
 ﻿spawnmenu {
+	z-index: 1000;
     left: 0px;
     right: 0px;
     top: 0px;
@@ -98,6 +99,35 @@
                     }
                 }
             }
+			
+			.util {
+                flex-direction: column;
+                color: #aaa;
+
+                button {
+                    padding: 3px 10px;
+                    transition: all 0.2s ease-out;
+                    cursor: pointer;
+
+                    label {
+                        opacity: 1;
+                    }
+
+                    &:hover {
+                        //border-left: 3px solid #3273eb;
+                        color: white;
+                    }
+
+                    &.active {
+                        //border-left: 5px solid #3273eb;
+                        color: white;
+                    }
+                }
+
+                Label {
+                    opacity: 0.5;
+                }
+            }
 
             .inspector {
                 //background-color: rgba( #111, 0.7 );
@@ -109,6 +139,17 @@
     }
 }
 
+.groupname, .title {
+    color: #eee;
+}
+
+.groups {
+    flex-direction: column;
+
+    .group {
+        flex-direction: column;
+    }
+}
 
 .spawnmenuopen spawnmenu {
     transition: all 0.2s ease-out;
