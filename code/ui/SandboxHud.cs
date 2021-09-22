@@ -3,7 +3,7 @@ using Sandbox.UI;
 
 public partial class SandboxHud : HudEntity<RootPanel>
 {
-	public static SandboxHud Current;
+	public static Hud Current;
 	public SandboxHud()
 	{
 		if ( !IsClient )
