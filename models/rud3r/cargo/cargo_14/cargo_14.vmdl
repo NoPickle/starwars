@@ -11,7 +11,7 @@
 				[
 					{
 						_class = "ModelModifier_ScaleAndMirror"
-						scale = 0.01
+						scale = 0.018
 						mirror_x = false
 						mirror_y = false
 						mirror_z = false
@@ -81,9 +81,63 @@
 						parent_bone = ""
 						surface_prop = "metal.sheet"
 						collision_prop = "default"
-						origin = [ -0.139347, 0.148663, 46.54438 ]
+						origin = [ 0.251125, -100.549255, 76.620506 ]
 						angles = [ 0.0, 0.0, 0.0 ]
-						dimensions = [ 298.063629, 132.381348, 92.889633 ]
+						dimensions = [ 400.656158, 37.645294, 153.041885 ]
+					},
+					{
+						_class = "PhysicsShapeBox"
+						parent_bone = ""
+						surface_prop = "metal.sheet"
+						collision_prop = "default"
+						origin = [ 0.251125, 99.358604, 76.620506 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 400.656158, 40.18837, 153.041885 ]
+					},
+					{
+						_class = "PhysicsShapeBox"
+						parent_bone = ""
+						surface_prop = "metal.sheet"
+						collision_prop = "default"
+						origin = [ 0.223263, -0.204617, 152.157745 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 367.389862, 200.025116, 1.967403 ]
+					},
+					{
+						_class = "PhysicsShapeBox"
+						parent_bone = ""
+						surface_prop = "metal.sheet"
+						collision_prop = "default"
+						origin = [ 0.789814, -0.196179, 4.945496 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 526.76825, 188.515518, 7.503143 ]
+					},
+					{
+						_class = "PhysicsShapeBox"
+						parent_bone = ""
+						surface_prop = "metal.sheet"
+						collision_prop = "default"
+						origin = [ 0.223263, -0.204617, 152.157745 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 367.389862, 200.025116, 1.967403 ]
+					},
+					{
+						_class = "PhysicsShapeBox"
+						parent_bone = ""
+						surface_prop = "metal.sheet"
+						collision_prop = "default"
+						origin = [ -210.604126, -0.204617, 159.918106 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 91.160522, 200.025116, 17.4881 ]
+					},
+					{
+						_class = "PhysicsShapeBox"
+						parent_bone = ""
+						surface_prop = "metal.sheet"
+						collision_prop = "default"
+						origin = [ 216.322113, -0.204617, 159.918106 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 78.626709, 200.025116, 17.4881 ]
 					},
 				]
 			},

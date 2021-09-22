@@ -11,7 +11,7 @@
 				[
 					{
 						_class = "ModelModifier_ScaleAndMirror"
-						scale = 0.01
+						scale = 0.006
 						mirror_x = false
 						mirror_y = false
 						mirror_z = false
@@ -73,9 +73,9 @@
 						parent_bone = ""
 						surface_prop = "metal.sheet"
 						collision_prop = "default"
-						origin = [ -0.040997, 0.216705, 19.778471 ]
+						origin = [ -0.221823, 1.077072, 11.860815 ]
 						angles = [ 0.0, 0.0, 0.0 ]
-						dimensions = [ 104.75856, 62.299294, 39.460445 ]
+						dimensions = [ 63.104725, 35.790054, 23.625141 ]
 					},
 				]
 			},

@@ -11,7 +11,7 @@
 				[
 					{
 						_class = "ModelModifier_ScaleAndMirror"
-						scale = 0.01
+						scale = 0.006
 						mirror_x = false
 						mirror_y = false
 						mirror_z = false
@@ -73,18 +73,18 @@
 						parent_bone = ""
 						surface_prop = "metal.sheet"
 						collision_prop = "default"
-						origin = [ -0.040997, -4.783535, 19.778364 ]
+						origin = [ 0.242907, -3.155698, 10.535639 ]
 						angles = [ 0.0, 0.0, 0.0 ]
-						dimensions = [ 104.75856, 72.299767, 39.460232 ]
+						dimensions = [ 62.559986, 43.181316, 20.974781 ]
 					},
 					{
 						_class = "PhysicsShapeBox"
 						parent_bone = ""
 						surface_prop = "metal.sheet"
 						collision_prop = "default"
-						origin = [ -0.040997, -25.082205, 46.603073 ]
+						origin = [ 0.013081, -15.195803, 26.159981 ]
 						angles = [ 0.0, 0.0, 0.0 ]
-						dimensions = [ 104.75856, 9.664303, 10.299408 ]
+						dimensions = [ 62.783905, 5.952061, 10.299629 ]
 					},
 				]
 			},
