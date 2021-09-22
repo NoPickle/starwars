@@ -73,9 +73,9 @@
 						parent_bone = ""
 						surface_prop = "metal.sheet"
 						collision_prop = "default"
-						origin = [ 0.055748, 0.062173, 11.489438 ]
+						origin = [ 0.057658, 0.132206, 11.532259 ]
 						angles = [ 0.0, 0.0, 0.0 ]
-						dimensions = [ 62.768906, 36.999008, 22.985838 ]
+						dimensions = [ 62.755768, 36.542988, 23.241543 ]
 					},
 				]
 			},
@@ -85,7 +85,7 @@
 				[
 					{
 						_class = "RenderMeshFile"
-						name = "cargo_13"
+						name = "cargo_13_0"
 						filename = "test/cargo_20.fbx"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
