@@ -247,6 +247,12 @@ spawnmenu {
     }
 }
 
+SpawnList {
+    .canvas {
+        overflow: scroll;
+    }
+}
+
 EntityList {
     overflow: scroll;
     flex-direction: column;
