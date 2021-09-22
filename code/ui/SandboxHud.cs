@@ -1,15 +1,13 @@
 ﻿using Sandbox;
 using Sandbox.UI;
 
+[Library]
 public partial class SandboxHud : HudEntity<RootPanel>
 {
-	public static Hud Current;
 	public SandboxHud()
 	{
 		if ( !IsClient )
 			return;
-
-		Current = this;
 
 		RootPanel.StyleSheet.Load( "/UI/SandboxHud.scss" );
 		RootPanel.SetTemplate( "/UI/starwars_devbanner.html" );		
