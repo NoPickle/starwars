@@ -246,3 +246,27 @@ spawnmenu {
         }
     }
 }
+
+EntityList {
+    overflow: scroll;
+    flex-direction: column;
+    color: white;
+
+    .group {
+        flex-direction: column;
+
+        .title {
+            color: white;
+        }
+
+        .entities {
+            overflow: visible;
+            justify-content: start;
+            flex-wrap: wrap;
+        }
+    }
+
+    .icon {
+        margin-right: 8px;
+    }
+}
