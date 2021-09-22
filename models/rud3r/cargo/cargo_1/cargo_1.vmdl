@@ -67,7 +67,7 @@
 					{
 						_class = "PhysicsShapeBox"
 						parent_bone = ""
-						surface_prop = "default"
+						surface_prop = "metal.sheet"
 						collision_prop = "default"
 						origin = [ 0.01838, -0.043427, 3.583859 ]
 						angles = [ 0.0, 0.0, 0.0 ]
