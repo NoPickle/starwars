@@ -24,5 +24,6 @@ public partial class SandboxHud : HudEntity<RootPanel>
 		RootPanel.AddChild<SpawnMenu>();
 
 		RootPanel.AddChild<ClassicChatBox>();
+		RootPanel.AddChild<RKillFeed>();
 	}
 }
