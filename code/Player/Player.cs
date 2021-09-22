@@ -1,10 +1,12 @@
 ﻿using Sandbox;
+using System;
 
 partial class SandboxPlayer : Player
 {
 	private TimeSince timeSinceDropped;
 	private TimeSince timeSinceJumpReleased;
-	private TimeSince timeSinceFall;
+	private TimeSince timeSinceLightToggled;
+	private TimeSince timeBetweenTwoFall;
 
 	private DamageInfo lastDamage;
 
@@ -14,31 +16,22 @@ partial class SandboxPlayer : Player
 	[Net, Predicted] public Entity Vehicle { get; set; }
 	[Net, Predicted] public ICamera MainCamera { get; set; }
 
-	[ConVar.Replicated("sv_fall_damage")]
-	public static bool HavaFallDamage { get; set; } = false;
+	public bool Swimming { get; set; } = false;
+	public bool Underwater { get; set; } = false;
 
+	private bool noclipOn = false;
+
+	private bool LightEnabled { get; set; } = false;
+
+	private SpotLightEntity worldLight;
+	private SpotLightEntity viewLight;
+
+	protected virtual Vector3 LightOffset => Vector3.Forward * 10;
 	public ICamera LastCamera { get; set; }
 
-	/// <summary>
-	/// The clothing container is what dresses the citizen
-	/// </summary>
-	public Clothing.Container Clothing = new();
-
-	/// <summary>
-	/// Default init
-	/// </summary>
 	public SandboxPlayer()
 	{
 		Inventory = new Inventory( this );
-	}
-
-	/// <summary>
-	/// Initialize using this client
-	/// </summary>
-	public SandboxPlayer( Client cl ) : this()
-	{
-		// Load clothing from client data
-		Clothing.LoadFromClient( cl );
 	}
 
 	public override void Spawn()
@@ -64,28 +57,30 @@ partial class SandboxPlayer : Player
 			DevController = null;
 		}
 
+		worldLight = CreateLight();
+		worldLight.SetParent( this, "hold_R", new Transform( LightOffset ) );
+		worldLight.EnableHideInFirstPerson = false;
+		worldLight.Enabled = LightEnabled;
+
 		EnableAllCollisions = true;
 		EnableDrawing = true;
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
 
-		Clothing.DressEntity( this );
+		Dress();
 
 		Inventory.Add( new PhysGun(), true );
+		Inventory.Add( new GravGun() );
+		Inventory.Add( new Tool() );
+		Inventory.Add( new Pistol() );
+		//Inventory.Add( new Flashlight() );
 
-		foreach ( var wep in Library.GetAllAttributes<Carriable>() )
-        {
-			if ( wep.Title == "Carriable" || wep.Title == "PhysGun" )
-				continue;
-
-			Inventory.Add( Library.Create<Carriable>( wep.Name ) );
-		}
-
-        base.Respawn();
+		base.Respawn();
 	}
 
 	public override void OnKilled()
 	{
+		//PlaySound( "xnbox_death" );
 		base.OnKilled();
 
 		if ( lastDamage.Flags.HasFlag( DamageFlags.Vehicle ) )
@@ -117,7 +112,7 @@ partial class SandboxPlayer : Player
 	{
 		if ( GetHitboxGroup( info.HitboxIndex ) == 1 )
 		{
-			info.Damage *= 2.0f;
+			info.Damage *= 10.0f;
 		}
 
 		lastDamage = info;
@@ -125,44 +120,45 @@ partial class SandboxPlayer : Player
 		TookDamage( lastDamage.Flags, lastDamage.Position, lastDamage.Force );
 
 		base.TakeDamage( info );
-
-		//Log.Info( info.Attacker is SandboxPlayer attacker && attacker != this );
-
-		if ( (info.Attacker != null && (info.Attacker is SandboxPlayer || info.Attacker.Owner is SandboxPlayer)) )
-		{
-			SandboxPlayer attacker = info.Attacker as SandboxPlayer;
-
-			if ( attacker == null )
-				attacker = info.Attacker.Owner as SandboxPlayer;
-
-			// Note - sending this only to the attacker!
-			if ( attacker != this )
-				attacker.DidDamage( To.Single( attacker ), info.Position, info.Damage, Health.LerpInverse( 100, 0 ), Health <= 0 );
-		}
-
-		TookDamage( To.Single( this ), (info.Weapon != null && info.Weapon.IsValid()) ? info.Weapon.Position : (info.Attacker != null && info.Attacker.IsValid()) ? info.Attacker.Position : Position );
 	}
 
 	[ClientRpc]
 	public void TookDamage( DamageFlags damageFlags, Vector3 forcePos, Vector3 force )
 	{
 	}
-
-	[ClientRpc]
-	public void DidDamage( Vector3 pos, float amount, float healthinv, bool isdeath )
+	public bool TouchGround()
 	{
-		Sound.FromScreen( "dm.ui_attacker" )
-			.SetPitch( 1 + healthinv * 1 );
-
-		HitIndicator.Current?.OnHit( pos, amount, isdeath );
+		var p = Position;
+		var vd = Vector3.Down;
+		return Trace.Ray( p, p + vd * 20 ).Radius( 1 ).Ignore( this ).Run().Hit;
 	}
 
-	[ClientRpc]
-	public void TookDamage( Vector3 pos )
+	public void PlaySoundFall()
 	{
-		//DebugOverlay.Sphere( pos, 5.0f, Color.Red, false, 50.0f );
+		var predictDeath = this.Health - 10.0f <= 0;
+		var fallSound = "xnbox_" + (predictDeath ? "death" : "fall") + "0";
+		var rndFall = new Random().Next( 1, predictDeath ? 2 : 5 );
+		Log.Info( fallSound + rndFall );
+		Sound.FromEntity( fallSound + rndFall, this );
+	}
 
-		DamageIndicator.Current?.OnHit( pos );
+	public void TakeFallDamage()
+	{
+		if ( LifeState != LifeState.Alive ) return;
+		var v = Velocity;
+		var d = Rotation.Down;
+		var vd = (v * d).z;
+		if ( timeBetweenTwoFall > 0.02f && vd >= 590 && TouchGround() )
+		{
+			var damage = new DamageInfo()
+			{
+				Position = Position,
+				Damage = 10.0f
+			};
+			PlaySoundFall();
+			TakeDamage( damage );
+			timeBetweenTwoFall = 0;
+		}
 	}
 
 	public override PawnController GetActiveController()
@@ -187,21 +183,44 @@ partial class SandboxPlayer : Player
 		return MainCamera;
 	}
 
-	public bool IsOnGround()
+	private SpotLightEntity CreateLight()
 	{
-		var tr = Trace.Ray( Position, Position + Vector3.Down * 5 )
-				.Radius( 1 )
-				.Ignore( this )
-				.Run();
+		var light = new SpotLightEntity
+		{
+			Enabled = true,
+			DynamicShadows = true,
+			Range = 512,
+			Falloff = 1.0f,
+			LinearAttenuation = 0.0f,
+			QuadraticAttenuation = 1.0f,
+			Brightness = 2,
+			Color = Color.White,
+			InnerConeAngle = 20,
+			OuterConeAngle = 40,
+			FogStength = 1.0f,
+			Owner = Owner,
+			LightCookie = Texture.Load( "materials/effects/lightcookie.vtex" )
+		};
 
-		return tr.Hit;
+		return light;
 	}
-
-	string oldavatar = ConsoleSystem.GetValue( "avatar" );
 
 	public override void Simulate( Client cl )
 	{
 		base.Simulate( cl );
+
+		Swimming = this.WaterLevel.Fraction > 0.6f;
+		Underwater = this.WaterLevel.Fraction > 0.6f; // change this value till its underwater, is above right now
+
+		if ( !Underwater )
+		{
+			// somehow overlay an effect over the screen that makes it look like the player is underwater
+		}
+
+		if ( !noclipOn && !Swimming )
+		{
+			TakeFallDamage();
+		}
 
 		if ( Input.ActiveChild != null )
 		{
@@ -210,16 +229,6 @@ partial class SandboxPlayer : Player
 
 		if ( LifeState != LifeState.Alive )
 			return;
-
-		var newavatar = ConsoleSystem.GetValue( "avatar" );
-
-		if ( oldavatar != newavatar )
-		{
-			oldavatar = newavatar;
-
-			Clothing.LoadFromClient( GetClientOwner() );
-			Clothing.DressEntity( this );
-		}
 
 		if ( VehicleController != null && DevController is NoclipController )
 		{
@@ -269,27 +278,34 @@ partial class SandboxPlayer : Player
 			timeSinceJumpReleased = 0;
 		}
 
-		// Why?
-		//if ( Input.Left != 0 || Input.Forward != 0 )
-		//{
-		//	timeSinceJumpReleased = 1;
-		//}
-
-		var DownVel = Velocity * Rotation.Down;
-		var falldamage = DownVel.z / 50;
-
-		if ( timeSinceFall > 0.02f && DownVel.z > 750 && IsOnGround() && !controller.HasTag( "noclip" ) && HavaFallDamage )
+		if ( Input.Left != 0 || Input.Forward != 0 )
 		{
-			timeSinceFall = 0;
+			timeSinceJumpReleased = 1;
+		}
 
-			var dmg = new DamageInfo()
+		if ( Input.Pressed( InputButton.Slot0 ) )
+		{
+			Game.NoclipCommand();
+			noclipOn = !noclipOn;
+		}
+
+		if ( timeSinceLightToggled > 0.1f && Input.Pressed( InputButton.Flashlight ) )
+		{
+			LightEnabled = !LightEnabled;
+
+			PlaySound( LightEnabled ? "flashlight-on" : "flashlight-off" );
+
+			if ( worldLight.IsValid() )
 			{
-				Position = Position,
-				Damage = falldamage
-			};
+				worldLight.Enabled = LightEnabled;
+			}
 
-			PlaySound( "dm.ui_attacker" );
-			TakeDamage( dmg );
+			if ( viewLight.IsValid() )
+			{
+				viewLight.Enabled = LightEnabled;
+			}
+
+			timeSinceLightToggled = 0;
 		}
 	}
 

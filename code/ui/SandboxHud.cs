@@ -10,8 +10,7 @@ public partial class SandboxHud : HudEntity<RootPanel>
 			return;
 
 		RootPanel.StyleSheet.Load( "/ui/SandboxHud.scss" );
-		RootPanel.SetTemplate( "/ui/starwars_devbanner.html" );
-		RootPanel.StyleSheet.Load( "/Styles/hud.scss" );	
+		RootPanel.SetTemplate( "/ui/starwars_devbanner.html" );		
 
 		RootPanel.AddChild<NameTags>();
 		RootPanel.AddChild<CrosshairCanvas>();
@@ -23,9 +22,5 @@ public partial class SandboxHud : HudEntity<RootPanel>
 		RootPanel.AddChild<InventoryBar>();
 		RootPanel.AddChild<CurrentTool>();
 		RootPanel.AddChild<SpawnMenu>();
-		RootPanel.AddChild<KillFeed>();
-		RootPanel.AddChild<Ammo>();
-		RootPanel.AddChild<DamageIndicator>();
-		RootPanel.AddChild<HitIndicator>();
 	}
 }
