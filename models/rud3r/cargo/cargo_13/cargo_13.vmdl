@@ -11,7 +11,7 @@
 				[
 					{
 						_class = "ModelModifier_ScaleAndMirror"
-						scale = 0.06
+						scale = 0.006
 						mirror_x = false
 						mirror_y = false
 						mirror_z = false
@@ -54,6 +54,10 @@
 								from = "naboo_cargo_box_2.vmat"
 								to = "materials/rud3r/cargo/cargo_13/cargo_13.vmat"
 							},
+							{
+								from = "naboo_cargo_box_2_grenades.vmat"
+								to = "materials/rud3r/cargo/cargo_13/cargo_13_1.vmat"
+							},
 						]
 						use_global_default = false
 						global_default_material = ""
@@ -69,9 +73,9 @@
 						parent_bone = ""
 						surface_prop = "metal.sheet"
 						collision_prop = "default"
-						origin = [ 0.63887, 1.947483, 115.20919 ]
+						origin = [ 0.055748, 0.062173, 11.489438 ]
 						angles = [ 0.0, 0.0, 0.0 ]
-						dimensions = [ 628.520996, 376.940491, 230.046768 ]
+						dimensions = [ 62.768906, 36.999008, 22.985838 ]
 					},
 				]
 			},
@@ -82,7 +86,7 @@
 					{
 						_class = "RenderMeshFile"
 						name = "cargo_13"
-						filename = "test/cargo_13.fbx"
+						filename = "test/cargo_20.fbx"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
 						import_scale = 1.0
