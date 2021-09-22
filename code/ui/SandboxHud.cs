@@ -1,10 +1,10 @@
 ﻿using Sandbox;
 using Sandbox.UI;
 
-public partial class Hud : HudEntity<RootPanel>
+public partial class SandboxHud : HudEntity<RootPanel>
 {
-	public static Hud Current;
-	public Hud()
+	public static SandboxHud Current;
+	public SandboxHud()
 	{
 		if ( !IsClient )
 			return;
