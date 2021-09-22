@@ -25,5 +25,7 @@ public partial class SandboxHud : HudEntity<RootPanel>
 		RootPanel.AddChild<SpawnMenu>();
 		RootPanel.AddChild<KillFeed>();
 		RootPanel.AddChild<Ammo>();
+		RootPanel.AddChild<DamageIndicator>();
+		RootPanel.AddChild<HitIndicator>();
 	}
 }
