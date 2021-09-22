@@ -21,62 +21,6 @@
 				]
 			},
 			{
-				_class = "MaterialGroupList"
-				children = 
-				[
-					{
-						_class = "DefaultMaterialGroup"
-						remaps = 
-						[
-							{
-								from = "st_cargo_2.vmat"
-								to = "materials/rud3r/cargo/cargo_2/cargo_2.vmat"
-							},
-						]
-						use_global_default = false
-						global_default_material = ""
-					},
-				]
-			},
-			{
-				_class = "PhysicsShapeList"
-				children = 
-				[
-					{
-						_class = "PhysicsShapeBox"
-						parent_bone = ""
-						surface_prop = "metal.sheet"
-						collision_prop = "default"
-						origin = [ 0.374655, 0.051425, -3.762089 ]
-						angles = [ 0.0, 0.0, 0.0 ]
-						dimensions = [ 56.452774, 56.106571, 22.226562 ]
-					},
-				]
-			},
-			{
-				_class = "RenderMeshList"
-				children = 
-				[
-					{
-						_class = "RenderMeshFile"
-						name = "2"
-						filename = "Nowy folder (7)/2.fbx"
-						import_translation = [ 0.0, 0.0, 0.0 ]
-						import_rotation = [ 0.0, 0.0, 0.0 ]
-						import_scale = 1.0
-						align_origin_x_type = "None"
-						align_origin_y_type = "None"
-						align_origin_z_type = "None"
-						parent_bone = ""
-						import_filter = 
-						{
-							exclude_by_default = false
-							exception_list = [  ]
-						}
-					},
-				]
-			},
-			{
 				_class = "GameDataList"
 				children = 
 				[
@@ -94,6 +38,62 @@
 							impact_damage = -1.0
 							parent_bodygroup_name = ""
 							parent_bodygroup_value = 0
+						}
+					},
+				]
+			},
+			{
+				_class = "MaterialGroupList"
+				children = 
+				[
+					{
+						_class = "DefaultMaterialGroup"
+						remaps = 
+						[
+							{
+								from = "st_cargo_3.vmat"
+								to = "materials/rud3r/cargo/cargo_3/cargo_3.vmat"
+							},
+						]
+						use_global_default = false
+						global_default_material = ""
+					},
+				]
+			},
+			{
+				_class = "PhysicsShapeList"
+				children = 
+				[
+					{
+						_class = "PhysicsShapeBox"
+						parent_bone = ""
+						surface_prop = "metal.sheet"
+						collision_prop = "default"
+						origin = [ -0.120093, -1.180289, 1.125106 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 25.57621, 55.395363, 15.902402 ]
+					},
+				]
+			},
+			{
+				_class = "RenderMeshList"
+				children = 
+				[
+					{
+						_class = "RenderMeshFile"
+						name = "3"
+						filename = "Nowy folder (7)/3.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = false
+							exception_list = [  ]
 						}
 					},
 				]
