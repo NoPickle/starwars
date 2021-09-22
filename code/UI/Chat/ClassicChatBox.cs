@@ -20,7 +20,7 @@ public partial class ClassicChatBox : Panel
 	{
 		Current = this;
 
-		StyleSheet.Load( "/ui/chat/ClassicChatBox.scss" );
+		StyleSheet.Load( "/UI/Chat/ClassicChatBox.scss" );
 
 		Canvas = Add.Panel( "classicchat_canvas" );
 
