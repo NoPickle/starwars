@@ -38,7 +38,11 @@ public class InventoryBar : Panel
 		}
 
 		inventoryIcon.TargetEnt = ent;
+		var oldtext = inventoryIcon.Label.Text;
 		inventoryIcon.Label.Text = ent.ClassInfo.Title;
+		// Prevents laggy transitions
+		if ( inventoryIcon.Label.Text != oldtext )
+			inventoryIcon.Style.SetBackgroundImage( $"/weapons/{ent.ClassInfo.Name}.png" );
 		inventoryIcon.SetClass( "active", ent.IsActiveChild() );
 	}
 
@@ -57,6 +61,9 @@ public class InventoryBar : Panel
 		{
 			return;
 		}
+
+		if ( Input.VR.RightHand.Joystick.Value.y == 1 && Input.VR.RightHand.Joystick.Delta.y != 0 ) input.MouseWheel = 1;
+		else if ( Input.VR.RightHand.Joystick.Value.y == -1 && Input.VR.RightHand.Joystick.Delta.y != 0 ) input.MouseWheel = -1;
 
 		if ( input.Pressed( InputButton.Slot1 ) ) SetActiveSlot( input, inventory, 0 );
 		if ( input.Pressed( InputButton.Slot2 ) ) SetActiveSlot( input, inventory, 1 );
