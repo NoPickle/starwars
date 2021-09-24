@@ -42,7 +42,7 @@ public class InventoryBar : Panel
 		inventoryIcon.Label.Text = ent.ClassInfo.Title;
 		// Prevents laggy transitions
 		if ( inventoryIcon.Label.Text != oldtext )
-			inventoryIcon.Style.SetBackgroundImage( $"/weapons/{ent.ClassInfo.Name}.png" );
+			inventoryIcon.Style.SetBackgroundImage( $"/weapons/icons/{ent.ClassInfo.Name}.png" );
 		inventoryIcon.SetClass( "active", ent.IsActiveChild() );
 	}
 
