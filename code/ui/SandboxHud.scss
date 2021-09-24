@@ -51,7 +51,7 @@ CurrentTool
 		font-size: 18px;
 		font-weight: normal;
 		text-shadow: 2px 2px 5px rgba( black, 0.3 );
-		color: yellow;
+		color: white;
 		opacity: 0.8;
 	}
 }
@@ -121,7 +121,7 @@ InventoryIcon {
     }
 
     &.active, &:hover {
-        background-color: rgba( yellow, 0.5 );
+        background-color: rgba( grey, 0.5 );
         transition: all 0.1s ease-out;
         width: 100px;
         height: 100px;
