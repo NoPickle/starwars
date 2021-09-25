@@ -13,7 +13,7 @@ partial class SandboxPlayer
 		ent.UsePhysicsCollision = true;
 		ent.EnableAllCollisions = true;
 		ent.CollisionGroup = CollisionGroup.Debris;
-		ent.SetModel( GetModelName() );
+		ent.SetModel( GetModelName() )
 		ent.CopyBonesFrom( this );
 		ent.CopyBodyGroups( this );
 		ent.CopyMaterialGroup( this );
