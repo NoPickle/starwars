@@ -283,7 +283,7 @@ partial class SandboxPlayer : Player
 			timeSinceJumpReleased = 1;
 		}
 
-		if ( Input.Pressed( InputButton.Slot0 ) )
+		if ( Input.Pressed( InputButton.X ) )
 		{
 			Game.NoclipCommand();
 			noclipOn = !noclipOn;
