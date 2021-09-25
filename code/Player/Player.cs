@@ -283,12 +283,6 @@ partial class SandboxPlayer : Player
 			timeSinceJumpReleased = 1;
 		}
 
-		if ( Input.Pressed( InputButton.Voice ) )
-		{
-			Game.NoclipCommand();
-			noclipOn = !noclipOn;
-		}
-
 		if ( timeSinceLightToggled > 0.1f && Input.Pressed( InputButton.Flashlight ) )
 		{
 			LightEnabled = !LightEnabled;
