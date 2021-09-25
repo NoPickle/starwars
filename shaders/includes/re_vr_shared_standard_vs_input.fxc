@@ -1,6 +1,0 @@
-float3 vPositionOs : POSITION < Semantic( PosXyz ); >;
-float4 vNormalOs : NORMAL < Semantic( OptionallyCompressedTangentFrame ); >;
-float2 vTexCoord : TEXCOORD0 < Semantic( LowPrecisionUv ); >;
-// Instancing data
-float2 vTransformTextureUV : TEXCOORD13 < Semantic( InstanceTransformUv ); >;
-uint nInstanceID : SV_InstanceID < Semantic( None ); >;
