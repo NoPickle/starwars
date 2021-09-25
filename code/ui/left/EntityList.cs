@@ -24,7 +24,7 @@ public partial class EntityList : Panel
 			btn.AddEventListener( "onclick", () => ConsoleSystem.Run( "spawn_entity", entry.Name ) );
 			btn.Style.Background = new PanelBackground
 			{
-				Texture = Texture.Load( $"/entity/{entry.Name}.png", false )
+				Texture = Texture.Load( $"/entity/ent/{entry.Name}.png", false )
 			};
 		};
 
