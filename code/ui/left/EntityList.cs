@@ -32,6 +32,9 @@ public partial class EntityList : Panel
 
 		foreach ( var entry in ents )
 		{
+			if(!(entry.Name).StartsWith( "ent_" )){ continue; }
+			if(!(entry.Name).StartsWith( "noise_" )){ continue; }
+			if(!(entry.Name).StartsWith( "directional_" )){ continue; }
 			Canvas.AddItem( entry );
 		}
 	}
